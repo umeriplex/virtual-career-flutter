@@ -5,23 +5,36 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:printing/printing.dart';
 import 'package:virtual_career/config/routes/route_name.dart';
 import 'package:virtual_career/config/routes/routes.dart';
+import 'package:virtual_career/core/theme/app_text_styles.dart';
+import 'package:virtual_career/core/utils/responsive.dart';
+import 'package:virtual_career/generated/assets.dart';
 
 import 'core/theme/app_colors.dart';
 import 'di.dart';
 import 'firebase_options.dart';
 
+var ttfFont;
+var materialIcon;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  final ttf = await fontFromAssetBundle(Assets.fontsRobotoRegular);
+  ttfFont = ttf;
+
+  final materialIconFont = pw.Font.ttf(
+    await rootBundle.load(Assets.fontsMaterialIconsRegular),
+  );
+  materialIcon = materialIconFont;
+
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  DI.init();
+
+  await DI().init();
   runApp(const MyApp());
 }
 
@@ -30,8 +43,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Responsive responsive = Responsive(context);
     return ScreenUtilInit(
-      designSize: const Size(360, 690),
+      designSize: Size(responsive.deviceWidth(), responsive.deviceHeight()),
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (_, child){
@@ -40,6 +54,13 @@ class MyApp extends StatelessWidget {
           builder: BotToastInit(),
           navigatorObservers: [BotToastNavigatorObserver()],
           theme: ThemeData(
+            appBarTheme: AppBarTheme(
+              backgroundColor: AppColor.primaryColor,
+              iconTheme: const IconThemeData(color: Colors.white),
+              titleTextStyle: AppTextStyles.titleOpenSans.copyWith(
+                color: Colors.white,
+              ),
+            ),
             primarySwatch: MaterialColor(
               AppColor.primaryColor.toARGB32(),
               const <int, Color>{
@@ -55,7 +76,9 @@ class MyApp extends StatelessWidget {
                 900: AppColor.primaryColor,
               },
             ),
-            textTheme: Typography.englishLike2018.apply(fontSizeFactor: 1.sp, fontFamily: GoogleFonts.poppins().fontFamily),
+            textTheme: Typography.englishLike2018.apply(fontSizeFactor: 1.sp, fontFamily: GoogleFonts.poppins().fontFamily, bodyColor: Colors.black    ),
+            scaffoldBackgroundColor: AppColor.scaffoldBackgroundColor,
+            primaryColor: AppColor.primaryColor,
           ),
           initialRoute: RouteNames.splash,
           getPages: AppRoutes.routes,

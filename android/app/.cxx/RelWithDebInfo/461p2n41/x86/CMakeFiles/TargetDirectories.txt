@@ -1,0 +1,2 @@
+C:/freelancer/virtual-career/virtual_career/android/app/.cxx/RelWithDebInfo/461p2n41/x86/CMakeFiles/edit_cache.dir
+C:/freelancer/virtual-career/virtual_career/android/app/.cxx/RelWithDebInfo/461p2n41/x86/CMakeFiles/rebuild_cache.dir
