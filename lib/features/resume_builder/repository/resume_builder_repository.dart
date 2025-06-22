@@ -118,6 +118,52 @@ class ResumeBuilderRepository{
   }
 
 
+  // Delete a resume
+  Future<AppResponse<void>> deleteResume(String resumeId) async {
+    try {
+      final resumeRef = _firestore.collection('pdfs').doc(resumeId);
+      final resumeSnapshot = await resumeRef.get();
+
+      if (!resumeSnapshot.exists) {
+        return AppResponse(
+          message: 'Resume not found',
+          success: false,
+          statusCode: 404,
+        );
+      }
+
+      final userId = resumeSnapshot.data()?['userId'] as String;
+      final pdfUrl = resumeSnapshot.data()?['pdfUrl'] as String;
+      final thumbnailUrl = resumeSnapshot.data()?['thumbnailUrl'] as String;
+
+      // Delete from Firestore
+      await resumeRef.delete();
+
+      // Delete from Storage
+      await _storage.refFromURL(pdfUrl).delete();
+      await _storage.refFromURL(thumbnailUrl).delete();
+
+      // Remove reference from user document
+      final userRef = _firestore.collection('users').doc(userId);
+      await userRef.update({
+        'resumes': FieldValue.arrayRemove([resumeId])
+      });
+
+      return AppResponse(
+        message: 'Resume deleted successfully',
+        success: true,
+        statusCode: 200,
+      );
+    } catch (e) {
+      return AppResponse(
+        message: FirebaseErrorHandler.getErrorMessage(e),
+        success: false,
+        statusCode: 400,
+      );
+    }
+  }
+
+
 
   Stream<List<UserResume>> getUserResumesStream(String userId) {
     return _firestore

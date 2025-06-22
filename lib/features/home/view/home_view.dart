@@ -1,4 +1,6 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -9,10 +11,10 @@ import 'package:virtual_career/core/managers/cache_manager.dart';
 import 'package:virtual_career/core/theme/app_colors.dart';
 import 'package:virtual_career/features/auth/controller/auth_controller.dart';
 import 'package:virtual_career/features/splash/controller/nav_controller.dart';
-
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/utils/responsive.dart';
 import '../../../generated/assets.dart';
+import '../../mock_interview/model/interview_model.dart';
 import '../../resume_builder/controller/resumer_builder_controller.dart';
 import '../../resume_builder/model/user_resume.dart';
 import '../../resume_builder/view/resume_viewer.dart';
@@ -34,6 +36,10 @@ class _HomeViewState extends State<HomeView> {
   Widget build(BuildContext context) {
     Responsive responsive = Responsive(context);
     return Obx(() {
+      final user = authController.user;
+      if (user == null) {
+        return const Scaffold(body: Center(child: CupertinoActivityIndicator()));
+      }
         return Scaffold(
           body: SingleChildScrollView(
             keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
@@ -44,7 +50,6 @@ class _HomeViewState extends State<HomeView> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
-                  height: responsive.deviceHeight(percent: 0.24),
                   width: responsive.deviceWidth(),
                   decoration: BoxDecoration(
                     color: Theme.of(context).primaryColor,
@@ -67,29 +72,35 @@ class _HomeViewState extends State<HomeView> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Container(
-                              width: 40.w,
-                              height: 40.w,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10.r),
-                                color: AppColor.buttonColor,
-                              ),
-                              child: Center(
-                                child: FaIcon(
-                                  FontAwesomeIcons.user,
-                                  color: Colors.black,
-                                  size: 20.sp,
+                            InkWell(
+                              onTap: () {
+                                Get.toNamed(RouteNames.profile);
+                              },
+                              child: Container(
+                                width: 40.w,
+                                height: 40.w,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10.r),
+                                  color: AppColor.buttonColor,
+                                ),
+                                child: Center(
+                                  child: FaIcon(
+                                    FontAwesomeIcons.user,
+                                    color: Colors.black,
+                                    size: 20.sp,
+                                  ),
                                 ),
                               ),
                             ),
                             InkWell(
-                              onTap: () async {
-                                var success = await authController.signOut();
-                                if (success) {
-                                  SharedPrefs.instance.removeUser();
-                                  Get.offAllNamed(RouteNames.login);
-                                }
-                              },
+                              // onTap: () async {
+                              //   var success = await authController.signOut();
+                              //   if (success) {
+                              //     SharedPrefs.instance.removeUser();
+                              //     Get.offAllNamed(RouteNames.login);
+                              //   }
+                              // },
+                              onTap: (){},
                               child: Image.asset(Assets.imagesNoti, width: 40.w, height: 40.w,),
                             ),
                           ],
@@ -104,11 +115,10 @@ class _HomeViewState extends State<HomeView> {
                           ),
                         ),
                         Text(
-                          authController.user?.fullName ?? "Unknown",
+                          user.fullName,
                           style: AppTextStyles.headlineOpenSans.copyWith(
                             color: Colors.white,
-                            fontSize: 34.sp,
-                            fontWeight: FontWeight.w600,
+                            fontSize: 24.sp,
                           ),
                         ),
                       ],
@@ -116,7 +126,6 @@ class _HomeViewState extends State<HomeView> {
                   ),
                 ),
 
-                10.verticalSpace,
                 Padding(
                   padding: responsive.responsivePadding(18.w, 10.h, 18.w, 20.h),
                   child: Column(
@@ -126,11 +135,9 @@ class _HomeViewState extends State<HomeView> {
                     children: [
                       Text(
                         "Featured Tool & Resources",
-                        style: AppTextStyles.headlineOpenSans.copyWith(
-                        ),
+                        style: AppTextStyles.subHeadlinePoppins,
                       ),
-                      10.verticalSpace,
-
+                      5.verticalSpace,
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -144,21 +151,19 @@ class _HomeViewState extends State<HomeView> {
                           _buildFirstRowItem(
                             title: "Mock Interview",
                             image: Assets.imagesMockInterview,
-                            onTap: () {},
+                            onTap: () => Get.toNamed(RouteNames.mockInterview),
                           ),
 
                           _buildFirstRowItem(
                             title: "Explore Events",
                             image: Assets.imagesEvents,
-                            onTap: () {},
+                            onTap: () {
+                              //Get.offNamed(RouteNames.interviewResult, arguments: { "category" : dummyCategory, "level" : dummyLevel, "result" : dummyResult });
+                            },
                           ),
 
                         ],
                       ),
-                      20.verticalSpace,
-
-
-
 
                       Obx((){
                         if(controller.resumes.isNotEmpty){
@@ -168,12 +173,12 @@ class _HomeViewState extends State<HomeView> {
                             mainAxisSize: MainAxisSize.min,
 
                             children: [
-                              30.verticalSpace,
+                              15.verticalSpace,
                               Text(
                                 "My Resumes",
-                                style: AppTextStyles.headlineOpenSans,
+                                style: AppTextStyles.subHeadlinePoppins,
                               ),
-                              10.verticalSpace,
+                              5.verticalSpace,
                               SizedBox(
                                 width: double.maxFinite,
                                 height: 250.h,
@@ -183,22 +188,45 @@ class _HomeViewState extends State<HomeView> {
                                     children: List.generate(
                                       resumes.length, (index) => GestureDetector(
                                       onTap: () async {
-                                        Get.to(() => ResumeViewer(pdfUrl: resumes[index].pdfUrl,));
+                                        Get.to(() => ResumeViewer(pdfUrl: resumes[index].pdfUrl, title: resumes[index].title,));
+                                      },
+                                      onLongPress: () async {
+
+                                        AwesomeDialog(
+                                          context: context,
+                                          dialogType: DialogType.warning,
+                                          animType: AnimType.scale,
+                                          title: 'Delete Resume',
+                                          desc: 'Are you sure you want to delete this resume?',
+                                          btnCancelOnPress: () {},
+                                          btnOkOnPress: () {
+                                            controller.deleteUserResume(resumes[index].id);
+                                          },
+                                        ).show();
+
+
+
                                       },
                                       child: Container(
-                                        clipBehavior: Clip.antiAlias,
-                                        width: 180.w,
-                                        height: 240.h,
-                                        margin: EdgeInsets.only(right: 10.w),
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(20.r),
-                                          border: Border.all(
-                                            color: AppColor.white20.withValues(alpha: 0.09),
-                                            width: 1.w,
+                                          clipBehavior: Clip.antiAlias,
+                                          height: 240.h,
+                                          margin: EdgeInsets.only(right: 14.w),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: AppColor.black20.withValues(alpha: 0.05),
+                                                offset: const Offset(0, 2),
+                                                blurRadius: 4,
+                                              ),
+                                              BoxShadow(
+                                                color: AppColor.black20.withValues(alpha: 0.05),
+                                                offset: const Offset(2, 0),
+                                                blurRadius: 4,
+                                              ),
+                                            ],
                                           ),
-                                        ),
-                                          child: UltimateCachedNetworkImage(imageUrl: resumes[index].thumbnailUrl)
-
+                                          child: UltimateCachedNetworkImage(imageUrl: resumes[index].thumbnailUrl, fit: BoxFit.contain,)
                                       ),
                                     ),
                                     ),
@@ -262,3 +290,57 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 }
+
+// Dummy InterviewCategory
+final InterviewCategory dummyCategory = InterviewCategory(
+  id: 'software_dev',
+  name: 'Software Development',
+  icon: Assets.imagesCivil,
+);
+
+// Dummy InterviewLevel
+final InterviewLevel dummyLevel = InterviewLevel(
+  id: 'intermediate',
+  name: 'Intermediate',
+  questionCount: 25,
+);
+
+// Dummy InterviewResult with realistic data
+final InterviewResult dummyResult = InterviewResult(
+  overallScore: 82.5,
+  strengths: [
+    'Strong problem-solving skills',
+    'Excellent communication of technical concepts',
+    'Good understanding of algorithms',
+  ],
+  improvements: [
+    'Could improve knowledge of design patterns',
+    'Needs more experience with cloud architecture',
+    'Should practice more system design questions',
+  ],
+  questions: [
+    InterviewQuestion(
+      question: "Explain the difference between async and await in Dart",
+      userAnswer: "Async marks a function as asynchronous, and await pauses execution until the Future completes",
+      idealAnswer: "Async marks a function to return a Future and enables await. Await pauses execution until the Future completes, without blocking the thread.",
+      score: 90,
+    ),
+    InterviewQuestion(
+      question: "What are the main SOLID principles?",
+      userAnswer: "Single responsibility, Open-closed, and Liskov substitution",
+      idealAnswer: "Single responsibility, Open-closed, Liskov substitution, Interface segregation, and Dependency inversion",
+      score: 75,
+    ),
+    InterviewQuestion(
+      question: "How would you optimize a slow database query?",
+      userAnswer: "I would add indexes to the columns being queried",
+      idealAnswer: "Add indexes, analyze query execution plan, optimize joins, consider denormalization, and implement caching where appropriate",
+      score: 80,
+    ),
+  ],
+  summary: "The candidate demonstrated strong technical knowledge particularly in core programming concepts. "
+      "They communicated clearly and showed good problem-solving approaches. "
+      "Areas for improvement include deeper knowledge of system design patterns and cloud technologies. "
+      "With some focused study in these areas, they would be ready for senior-level interviews.",
+  completedAt: DateTime.now(),
+);

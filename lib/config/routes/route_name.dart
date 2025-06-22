@@ -5,6 +5,10 @@ class RouteNames{
   static const String forgotPassword = '/forgotPassword';
   static const String navBar = '/navBar';
   static const String home = '/home';
+  static const String mockInterview = '/mockInterview';
+  static const String interviewLevel = '/interviewLevel';
+  static const String interviewScreen = '/interviewScreen';
+  static const String interviewResult = '/interviewResult';
   static const String profile = '/profile';
   static const String settings = '/settings';
   static const String about = '/about';

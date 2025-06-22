@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:virtual_career/core/managers/cache_manager.dart';
 import '../../../config/exception/firebase_error_handler.dart';
@@ -302,4 +305,89 @@ class AuthRepository {
       );
     }
   }
+
+
+
+
+  Future<AppResponse<UserModel>> updateProfile({
+    required String userId,
+    String? fullName,
+    String? bio,
+  }) async {
+    try {
+      final Map<String, dynamic> updateData = {};
+
+      if (fullName != null) updateData['fullName'] = fullName;
+      if (bio != null) updateData['bio'] = bio;
+
+      await _firestore.collection('users').doc(userId).update(updateData);
+
+      // Get updated user data
+      final doc = await _firestore.collection('users').doc(userId).get();
+      final updatedUser = UserModel.fromJson(doc.data()!, userId);
+
+      // Update local storage
+      await saveUser(updatedUser);
+
+      return AppResponse(
+        data: updatedUser,
+        message: 'Profile updated successfully',
+        success: true,
+        statusCode: 200,
+      );
+    } catch (e) {
+      return AppResponse(
+        message: 'Error updating profile: ${e.toString()}',
+        success: false,
+        statusCode: 400,
+      );
+    }
+  }
+
+  Future<AppResponse<UserModel>> updateProfilePicture({
+    required String userId,
+    required File imageFile,
+  }) async {
+    try {
+      // Upload image to Firebase Storage
+      final Reference storageRef = FirebaseStorage.instance
+          .ref()
+          .child('profile_pictures')
+          .child('$userId-${DateTime.now().millisecondsSinceEpoch}');
+
+      final UploadTask uploadTask = storageRef.putFile(imageFile);
+      final TaskSnapshot snapshot = await uploadTask;
+      final String downloadUrl = await snapshot.ref.getDownloadURL();
+
+      // Update user document
+      await _firestore.collection('users').doc(userId).update({
+        'profileImageUrl': downloadUrl,
+      });
+
+      // Get updated user data
+      final doc = await _firestore.collection('users').doc(userId).get();
+      final updatedUser = UserModel.fromJson(doc.data()!, userId);
+
+      // Update local storage
+      await saveUser(updatedUser);
+
+      return AppResponse(
+        data: updatedUser,
+        message: 'Profile picture updated successfully',
+        success: true,
+        statusCode: 200,
+      );
+    } catch (e) {
+      return AppResponse(
+        message: 'Error updating profile picture: ${e.toString()}',
+        success: false,
+        statusCode: 400,
+      );
+    }
+  }
+
+
+
+
+
 }

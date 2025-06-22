@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:virtual_career/features/auth/repository/auth_repository.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:virtual_career/features/chat_bot/controller/chatbot_controller.dart';
 import 'package:virtual_career/features/splash/controller/nav_controller.dart';
 import 'core/managers/cache_manager.dart';
 import 'features/auth/controller/auth_controller.dart';
@@ -51,5 +52,6 @@ class DI{
     Get.put(NavController(), permanent: true);
     Get.lazyPut(() => AuthController(Get.find()), fenix: true);
     Get.lazyPut(() => ResumeBuilderController(Get.find()), fenix: true);
+    Get.lazyPut(() => ChatBotController(), fenix: true);
   }
 }

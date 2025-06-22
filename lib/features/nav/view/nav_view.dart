@@ -71,7 +71,7 @@ class NavView extends StatelessWidget {
         const HomeView(),
         ResumeBuilderView(),
         const JobView(),
-        const ChatBotView(),
+        ChatBotView(),
       ],
     );
   }

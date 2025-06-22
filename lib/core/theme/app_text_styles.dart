@@ -6,25 +6,26 @@ class AppTextStyles {
   // ----------- POPPINS STYLES -----------
 
   static TextStyle headlinePoppins = GoogleFonts.poppins(
-    fontSize: 24.sp,
+    fontSize: 20.sp,
     fontWeight: FontWeight.w700,
     color: Colors.black,
   );
 
   static TextStyle subHeadlinePoppins = GoogleFonts.poppins(
-    fontSize: 20.sp,
+    fontSize: 18.sp,
     fontWeight: FontWeight.w600,
     color: Colors.black87,
+
   );
 
   static TextStyle titlePoppins = GoogleFonts.poppins(
-    fontSize: 18.sp,
+    fontSize: 16.sp,
     fontWeight: FontWeight.w500,
     color: Colors.black87,
   );
 
   static TextStyle bodyPoppins = GoogleFonts.poppins(
-    fontSize: 16.sp,
+    fontSize: 14.sp,
     fontWeight: FontWeight.w400,
     color: Colors.black54,
   );
@@ -50,25 +51,25 @@ class AppTextStyles {
   // ----------- OPEN SANS STYLES -----------
 
   static TextStyle headlineOpenSans = GoogleFonts.openSans(
-    fontSize: 24.sp,
+    fontSize: 20.sp,
     fontWeight: FontWeight.w700,
     color: Colors.black,
   );
 
   static TextStyle subHeadlineOpenSans = GoogleFonts.openSans(
-    fontSize: 20.sp,
+    fontSize: 18.sp,
     fontWeight: FontWeight.w600,
     color: Colors.black87,
   );
 
   static TextStyle titleOpenSans = GoogleFonts.openSans(
-    fontSize: 18.sp,
+    fontSize: 16.sp,
     fontWeight: FontWeight.w500,
     color: Colors.black87,
   );
 
   static TextStyle bodyOpenSans = GoogleFonts.openSans(
-    fontSize: 16.sp,
+    fontSize: 14.sp,
     fontWeight: FontWeight.w400,
     color: Colors.black54,
   );

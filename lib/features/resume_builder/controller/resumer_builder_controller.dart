@@ -51,6 +51,27 @@ class ResumeBuilderController extends GetxController{
     }finally { isLoading(false); }
   }
 
+
+  // delete user resume
+  Future<bool> deleteUserResume(String resumeId) async {
+    try {
+      final response = await _resumeBuilderRepository.deleteResume(resumeId);
+      if (response.success) {
+        showSuccessMessage(response.message);
+        _resumes.value.removeWhere((resume) => resume.id == resumeId);
+        _resumes.refresh();
+      } else {
+        showErrorMessage(response.message);
+      }
+      return response.success;
+    } catch (e) {
+      debugPrint('Error deleting resume: $e');
+      showErrorMessage('An error occurred while deleting the resume: $e');
+      return false;
+    }
+  }
+
+
   Future<void> fetchUserResumes(String userId) async {
     try {
       final response = await _resumeBuilderRepository.getUserResumes(userId);

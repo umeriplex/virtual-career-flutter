@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:virtual_career/core/utils/toast_helper.dart';
@@ -182,4 +184,64 @@ class AuthController extends GetxController {
       isLoading(false);
     }
   }
+
+
+  Future<bool> updateProfile({
+    String? fullName,
+    String? bio,
+  }) async {
+    try {
+      if (_user.value == null) return false;
+
+      isLoading(true);
+      final response = await _authRepository.updateProfile(
+        userId: _user.value!.id,
+        fullName: fullName,
+        bio: bio,
+      );
+
+      if (response.success) {
+        _user.value = response.data;
+        showSuccessMessage(response.message);
+        return true;
+      } else {
+        showErrorMessage(response.message);
+        return false;
+      }
+    } catch (e) {
+      debugPrint("Error updating profile: $e");
+      showErrorMessage("Failed to update profile");
+      return false;
+    } finally {
+      isLoading(false);
+    }
+  }
+
+  Future<bool> updateProfilePicture(File imageFile) async {
+    try {
+      if (_user.value == null) return false;
+
+      isLoading(true);
+      final response = await _authRepository.updateProfilePicture(
+        userId: _user.value!.id,
+        imageFile: imageFile,
+      );
+
+      if (response.success) {
+        _user.value = response.data;
+        showSuccessMessage(response.message);
+        return true;
+      } else {
+        showErrorMessage(response.message);
+        return false;
+      }
+    } catch (e) {
+      debugPrint("Error updating profile picture: $e");
+      showErrorMessage("Failed to update profile picture");
+      return false;
+    } finally {
+      isLoading(false);
+    }
+  }
+
 }

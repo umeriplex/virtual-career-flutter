@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -91,7 +92,7 @@ class _ResumeBuilderViewState extends State<ResumeBuilderView> {
                         children: [
                           Text(
                             'Start Your\nResume Journey',
-                            style: AppTextStyles.headlineOpenSans.copyWith(
+                            style: AppTextStyles.subHeadlineOpenSans.copyWith(
                               color: Colors.white,
                             ),
                           ),
@@ -100,24 +101,23 @@ class _ResumeBuilderViewState extends State<ResumeBuilderView> {
                             'Build a standout resume that reflects your goals and strengths.',
                             style: AppTextStyles.bodyOpenSans.copyWith(
                               color: Colors.white,
-                              fontSize: 16.sp,
                             ),
                           ),
                         ],
                       ),
                     ),
 
-                    10.horizontalSpace,
+                    8.horizontalSpace,
                     InkWell(
                       onTap: () async {
                         _pickResume();
                         // await _generateAndOpenPdf(15, context, resume10);
                       },
                       child: Container(
-                        padding: responsive.responsivePadding(10.w, 10.h, 10.w, 10.h),
+                        padding: responsive.responsivePadding(8.w, 8.h, 8.w, 8.h),
                         decoration: BoxDecoration(
                           color: AppColor.buttonColor,
-                          borderRadius: BorderRadius.circular(20.r),
+                          borderRadius: BorderRadius.circular(18.r),
                         ),
                         child: Center(
                           child: _isLoading ? const CupertinoActivityIndicator(color: AppColor.black80,) : Column(
@@ -126,15 +126,14 @@ class _ResumeBuilderViewState extends State<ResumeBuilderView> {
                               FaIcon(
                                 FontAwesomeIcons.plus,
                                 color: Colors.black,
-                                size: 34.sp,
+                                size: 30.sp,
                               ),
                               5.verticalSpace,
                               Text(
-                                'New Resume',
+                                'Upload Resume',
                                 textAlign: TextAlign.center,
                                 style: AppTextStyles.bodyOpenSans.copyWith(
                                   color: Colors.black,
-                                  fontSize: 16.sp,
                                 ),
                               ),
                             ],
@@ -146,14 +145,13 @@ class _ResumeBuilderViewState extends State<ResumeBuilderView> {
                 ),
               ),
 
-              20.verticalSpace,
+              16.verticalSpace,
               Text(
                 "Resume Templates",
-                style: AppTextStyles.headlineOpenSans.copyWith(
-                ),
+                style: AppTextStyles.subHeadlinePoppins,
               ),
 
-              30.verticalSpace,
+              5.verticalSpace,
               SizedBox(
                 width: double.maxFinite,
                 height: 250.h,
@@ -170,19 +168,30 @@ class _ResumeBuilderViewState extends State<ResumeBuilderView> {
                         },
                         child: Container(
                           clipBehavior: Clip.antiAlias,
-                          width: 180.w,
-                          height: 240.h,
-                          margin: EdgeInsets.only(right: 10.w),
+                          width: 157.w,
+                          height: 220.h,
+                          margin: EdgeInsets.only(right: 14.w),
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20.r),
-                            border: Border.all(
-                              color: selectedTemplate == index ? AppColor.primaryColor : AppColor.white20.withValues(alpha: 0.09),
-                              width: selectedTemplate == index ? 2.w : 1.w,
-                            ),
+                            border: selectedTemplate == index ? Border.all(
+                              color: index % 2 == 0 ? AppColor.buttonColor : AppColor.primaryColor,
+                              width: 2.w,
+                            ) : null,
                             image: DecorationImage(
                               image: AssetImage(resumeTemplates[index]),
-                              fit: BoxFit.cover,
+                              fit: BoxFit.fill,
                             ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppColor.black20.withValues(alpha: 0.05),
+                                offset: const Offset(0, 2),
+                                blurRadius: 4,
+                              ),
+                              BoxShadow(
+                                color: AppColor.black20.withValues(alpha: 0.05),
+                                offset: const Offset(2, 0),
+                                blurRadius: 4,
+                              ),
+                            ],
                           ),
                           child: selectedTemplate == index ?
                           Center(
@@ -223,12 +232,12 @@ class _ResumeBuilderViewState extends State<ResumeBuilderView> {
                     mainAxisSize: MainAxisSize.min,
 
                     children: [
-                      30.verticalSpace,
+                      15.verticalSpace,
                       Text(
                         "My Resumes",
-                        style: AppTextStyles.headlineOpenSans,
+                        style: AppTextStyles.subHeadlinePoppins,
                       ),
-                      10.verticalSpace,
+                      5.verticalSpace,
                       SizedBox(
                         width: double.maxFinite,
                         height: 250.h,
@@ -238,21 +247,46 @@ class _ResumeBuilderViewState extends State<ResumeBuilderView> {
                             children: List.generate(
                               resumes.length, (index) => GestureDetector(
                               onTap: () async {
-                                Get.to(() => ResumeViewer(pdfUrl: resumes[index].pdfUrl,));
+                                //Get.to(() => ResumeViewer(pdfUrl: resumes[index].pdfUrl,));
+                                Get.to(() => ResumeViewer(pdfUrl: resumes[index].pdfUrl, title: resumes[index].title,));
+                              },
+                              onLongPress: () async {
+
+                                AwesomeDialog(
+                                  context: context,
+                                  dialogType: DialogType.warning,
+                                  animType: AnimType.scale,
+                                  title: 'Delete Resume',
+                                  desc: 'Are you sure you want to delete this resume?',
+                                  btnCancelOnPress: () {},
+                                  btnOkOnPress: () {
+                                    controller.deleteUserResume(resumes[index].id);
+                                  },
+                                ).show();
+
+
+
                               },
                               child: Container(
-                                clipBehavior: Clip.antiAlias,
-                                width: 180.w,
-                                height: 240.h,
-                                margin: EdgeInsets.only(right: 10.w),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20.r),
-                                  border: Border.all(
-                                    color: AppColor.white20.withValues(alpha: 0.09),
-                                    width: 1.w,
+                                  clipBehavior: Clip.antiAlias,
+                                  height: 240.h,
+                                  margin: EdgeInsets.only(right: 14.w),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: AppColor.black20.withValues(alpha: 0.05),
+                                        offset: const Offset(0, 2),
+                                        blurRadius: 4,
+                                      ),
+                                      BoxShadow(
+                                        color: AppColor.black20.withValues(alpha: 0.05),
+                                        offset: const Offset(2, 0),
+                                        blurRadius: 4,
+                                      ),
+                                    ],
                                   ),
-                                ),
-                                child: UltimateCachedNetworkImage(imageUrl: resumes[index].thumbnailUrl)
+                                  child: UltimateCachedNetworkImage(imageUrl: resumes[index].thumbnailUrl, fit: BoxFit.contain,)
                               ),
                             ),
                             ),
@@ -274,6 +308,8 @@ class _ResumeBuilderViewState extends State<ResumeBuilderView> {
     );
   }
 
+
+
   Future<void> _generateAndOpenPdf(int templateNumber, BuildContext context, Resume resume) async {
     try {
       final scaffoldMessenger = ScaffoldMessenger.of(context);
@@ -288,6 +324,11 @@ class _ResumeBuilderViewState extends State<ResumeBuilderView> {
       Get.to(() => ResumeViewer(file: file, isNew: true, resume: resume,));
       // await PdfResumeService.openFile(file);
     } catch (e) {
+      debugPrint("Error generating PDF: $e");
+      if(e.toString().contains("Widget won't fit into the page") || e.toString().contains("probably") || e.toString().contains("SpanningWidget ")){
+        showErrorMessage("This template is for only small size resume, please update smaller resume.");
+        return;
+      }
       showErrorMessage("Failed to generate PDF: $e");
     }
   }
@@ -304,6 +345,7 @@ class _ResumeBuilderViewState extends State<ResumeBuilderView> {
       Get.to(() => ResumeViewer(file: file, isNew: false, resume: resume,));
       // await PdfResumeService.openFile(file);
     } catch (e) {
+      debugPrint("Error generating PDF: $e");
       showErrorMessage("Failed to generate PDF: $e");
     }
   }
@@ -364,7 +406,7 @@ class _ResumeBuilderViewState extends State<ResumeBuilderView> {
       // Initialize the Gemini model
       final model = GenerativeModel(
         model: 'gemini-2.0-flash',
-        apiKey: "AIzaSyAamZnC3rXzQKNLwC_8ju0p-ScLylh9JEE",
+        apiKey: AppConstants.geminiKey,
       );
 
       // Create a prompt for Gemini
@@ -373,6 +415,9 @@ You are a resume parser. The user will provide raw resume text like [$resumeText
 
 **Your task:**
 - Analyze the text and try to extract structured resume data.
+- Extract skills in single words, like this: "items": ["NodeJs" , "Figma", "MVVM", "iOS Development"], i mean skills items must not be a sentence or a paragraph.
+- Never include languages in skills section.
+- If profile summary not available it the given data, them create short 30 words summary, but never ever include User name in the summary.
 - If the text appears to be a valid resume, extract the data and return only valid JSON in the format below.
 - If the text is not a resume, is empty, or is unreadable, return this instead:
   { "error": "Resume data not found or the file is invalid." }
@@ -2239,6 +2284,6 @@ Make sure your output is pure JSON and parsable. Do not include any pretext or e
   @override
   void initState() {
     super.initState();
-    _apiKeyController.text = "AIzaSyAamZnC3rXzQKNLwC_8ju0p-ScLylh9JEE";
+    _apiKeyController.text = AppConstants.geminiKey;
   }
 }

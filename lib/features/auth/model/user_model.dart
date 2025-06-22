@@ -19,6 +19,8 @@ class UserModel {
 
   // Convert model to JSON for Firestore
   Map<String, dynamic> toJson() {
+
+
     return {
       'id': id,
       'fullName': fullName,

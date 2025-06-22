@@ -64,19 +64,23 @@ class _SignUpViewState extends State<SignUpView> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text(
-                      "Create Account",
-                      style: AppTextStyles.headlineOpenSans.copyWith(
-                        color: Colors.white,
-                        fontSize: 34.sp,
-                        fontWeight: FontWeight.w600,
+                    Padding(
+                      padding: responsive.responsivePadding(12, 0, 12, 0),
+                      child: Text(
+                        "Get Started",
+                        textAlign: TextAlign.center,
+                        style: AppTextStyles.headlineOpenSans.copyWith(
+                          color: Colors.white,
+                          fontSize: 34.sp,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                     10.verticalSpace,
                     Padding(
                       padding: responsive.responsivePadding(12, 0, 12, 0),
                       child: Text(
-                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
+                        "Create your free account to begin.\nAccess exclusive content and tailored experience instantly.",
                         textAlign: TextAlign.center,
                         style: AppTextStyles.bodyPoppins.copyWith(
                           color: Colors.white,

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:bot_toast/bot_toast.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +15,7 @@ import 'package:virtual_career/core/theme/app_text_styles.dart';
 import 'package:virtual_career/core/utils/responsive.dart';
 import 'package:virtual_career/generated/assets.dart';
 
+import 'core/components/custom_button.dart';
 import 'core/theme/app_colors.dart';
 import 'di.dart';
 import 'firebase_options.dart';
@@ -20,8 +23,10 @@ import 'firebase_options.dart';
 var ttfFont;
 var materialIcon;
 Future<void> main() async {
+
+
   WidgetsFlutterBinding.ensureInitialized();
-  final ttf = await fontFromAssetBundle(Assets.fontsRobotoRegular);
+  final ttf = await fontFromAssetBundle(Assets.fontsOpenSansRegular);
   ttfFont = ttf;
 
   final materialIconFont = pw.Font.ttf(
@@ -45,43 +50,71 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     Responsive responsive = Responsive(context);
     return ScreenUtilInit(
-      designSize: Size(responsive.deviceWidth(), responsive.deviceHeight()),
+      designSize: const Size(390, 844), // Standard design size (iPhone 13 dimensions)
       minTextAdapt: true,
       splitScreenMode: true,
-      builder: (_, child){
-        return GetMaterialApp(
-          debugShowCheckedModeBanner: false,
-          builder: BotToastInit(),
-          navigatorObservers: [BotToastNavigatorObserver()],
-          theme: ThemeData(
-            appBarTheme: AppBarTheme(
-              backgroundColor: AppColor.primaryColor,
-              iconTheme: const IconThemeData(color: Colors.white),
-              titleTextStyle: AppTextStyles.titleOpenSans.copyWith(
-                color: Colors.white,
-              ),
-            ),
-            primarySwatch: MaterialColor(
-              AppColor.primaryColor.toARGB32(),
-              const <int, Color>{
-                50: AppColor.primaryColor,
-                100: AppColor.primaryColor,
-                200: AppColor.primaryColor,
-                300: AppColor.primaryColor,
-                400: AppColor.primaryColor,
-                500: AppColor.primaryColor,
-                600: AppColor.primaryColor,
-                700: AppColor.primaryColor,
-                800: AppColor.primaryColor,
-                900: AppColor.primaryColor,
-              },
-            ),
-            textTheme: Typography.englishLike2018.apply(fontSizeFactor: 1.sp, fontFamily: GoogleFonts.poppins().fontFamily, bodyColor: Colors.black    ),
-            scaffoldBackgroundColor: AppColor.scaffoldBackgroundColor,
-            primaryColor: AppColor.primaryColor,
+      builder: (context, child) {
+        final mediaQueryData = MediaQuery.of(context);
+
+        // Constrain both text scaling and display size
+        final constrainedMediaQuery = mediaQueryData.copyWith(
+          textScaler: const TextScaler.linear(1.0), // Fixed text scale
+          size: Size(
+            min(mediaQueryData.size.width, 500), // Max logical width
+            mediaQueryData.size.height,
           ),
-          initialRoute: RouteNames.splash,
-          getPages: AppRoutes.routes,
+        );
+
+        return MediaQuery(
+          data: constrainedMediaQuery,
+          child: GetMaterialApp(
+            debugShowCheckedModeBanner: false,
+            builder: (context, child) {
+              return BotToastInit()(
+                  context,
+                  MediaQuery(
+                    data: MediaQuery.of(context).copyWith(textScaler: const TextScaler.linear(1.0),),
+                    child: child!,
+                  ),
+                );
+            },
+            navigatorObservers: [BotToastNavigatorObserver()],
+            theme: ThemeData(
+              appBarTheme: AppBarTheme(
+                backgroundColor: AppColor.primaryColor,
+                iconTheme: const IconThemeData(color: Colors.white),
+                titleTextStyle: AppTextStyles.titleOpenSans.copyWith(
+                  color: Colors.white,
+                  fontSize: 18.sp, // Use sp units for responsive text
+                ),
+              ),
+              primarySwatch: MaterialColor(
+                AppColor.primaryColor.value,
+                <int, Color>{
+                  50: AppColor.primaryColor.withOpacity(0.1),
+                  100: AppColor.primaryColor.withOpacity(0.2),
+                  200: AppColor.primaryColor.withOpacity(0.3),
+                  300: AppColor.primaryColor.withOpacity(0.4),
+                  400: AppColor.primaryColor.withOpacity(0.5),
+                  500: AppColor.primaryColor.withOpacity(0.6),
+                  600: AppColor.primaryColor.withOpacity(0.7),
+                  700: AppColor.primaryColor.withOpacity(0.8),
+                  800: AppColor.primaryColor.withOpacity(0.9),
+                  900: AppColor.primaryColor,
+                },
+              ),
+              textTheme: TextTheme(
+                displayLarge: AppTextStyles.headlinePoppins,
+                displayMedium: AppTextStyles.bodyPoppins,
+                displaySmall: AppTextStyles.captionPoppins,
+                // Add all other text styles as needed
+              ),
+              scaffoldBackgroundColor: AppColor.scaffoldBackgroundColor,
+              primaryColor: AppColor.primaryColor,
+            ),
+            initialRoute: RouteNames.splash,
+            getPages: AppRoutes.routes,
+          ),
         );
       },
     );
