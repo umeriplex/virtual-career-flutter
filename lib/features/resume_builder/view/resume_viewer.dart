@@ -51,14 +51,14 @@ class _ResumeViewerState extends State<ResumeViewer> {
     setState(() => _isDownloading = true);
 
     try {
-      final filePath = await PDFDownloadManager.savePDF(
+      final filePath = await PDFDownloadManager.save(
         widget.pdfUrl!,
-        widget.title!
+        fileName: widget.title!
       );
 
       if (filePath != null) {
         _downloadedFilePath = filePath;
-        showSuccessMessage("PDF downloaded successfully");
+        showSuccessMessage("PDF downloaded successfully at $filePath");
       } else {
         showErrorMessage("Failed to download PDF");
       }
@@ -193,14 +193,14 @@ class _ResumeViewerState extends State<ResumeViewer> {
         appBar: AppBar(
           title: const Text('Resume Viewer'),
           actions: [
-            // widget.pdfUrl != null ?
-            // IconButton(
-            //   icon: const Icon(Icons.download),
-            //   onPressed: _isDownloading ? (){} :  () async {
-            //     _downloadPDF();
-            //   },
-            // ) :
-            // Container(),
+            widget.pdfUrl != null ?
+            IconButton(
+              icon: const Icon(Icons.download),
+              onPressed: _isDownloading ? (){} :  () async {
+                _downloadPDF();
+              },
+            ) :
+            Container(),
 
             // share icon
             widget.pdfUrl != null ?

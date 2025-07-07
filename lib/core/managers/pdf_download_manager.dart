@@ -6,41 +6,153 @@ import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'dart:io';
+import 'package:dio/dio.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class PDFDownloadManager {
-  static Future<String?> savePDF(String url, String fileName) async {
+
+  static Future<String?> save(String url, { String? fileName }) async {
     try {
-      debugPrint('Downloading PDF from: $url with name: $fileName');
-
-      // Ask for storage permission
-      if (!await Permission.manageExternalStorage.request().isGranted) {
-        debugPrint('Storage permission not granted');
-        return null;
-      }
-
-
-      // Download the PDF file from URL
-      final http.Response response = await http.get(Uri.parse(url));
+      String uri = url;
+      final response = await http.get(Uri.parse(uri));
       if (response.statusCode != 200) {
-        throw Exception('Failed to download PDF');
+        throw Exception('Failed to download file: ${response.statusCode}');
       }
+      final bytes = response.bodyBytes;
 
-      // Path to the public Downloads directory
-      final String downloadsPath = '/storage/emulated/0/Download';
-      final File file = File('$downloadsPath/$fileName.pdf');
+      Directory generalDownloadDir = Directory('/storage/emulated/0/Download'); //! THIS WORKS for android only !!!!!!
 
-      // Save the file
-      await file.writeAsBytes(response.bodyBytes);
-      debugPrint('PDF saved at: ${file.path}');
-      return file.path;
-
+      //qr image file saved to general downloads folder
+      File qrJpg = await File('${generalDownloadDir.path}/$fileName.pdf').create();
+      await qrJpg.writeAsBytes(bytes);
+      print('PDF saved to: ${qrJpg.path}');
+      return qrJpg.path;
     } catch (e) {
-      debugPrint('Error saving PDF: $e');
+      print('Error saving PDF: $e');
       return null;
     }
   }
 
 
+  static Future<String?> downloadAndSavePdf(String pdfUrl, {String? fileName}) async {
+    try {
+      // Request storage permission
+      if (Platform.isAndroid) {
+        var status = await Permission.storage.status;
+        if (!status.isGranted) {
+          status = await Permission.storage.request();
+          if (!status.isGranted) {
+            throw Exception('Storage permission denied');
+          }
+        }
+      }
 
+      // Create Dio instance
+      Dio dio = Dio();
 
+      // Get the application documents directory
+      Directory appDocDir = await getApplicationDocumentsDirectory();
+
+      // Create filename if not provided
+      fileName ??= 'downloaded_pdf_${DateTime.now().millisecondsSinceEpoch}.pdf';
+
+      // Ensure filename has .pdf extension
+      if (!fileName.endsWith('.pdf')) {
+        fileName += '.pdf';
+      }
+
+      // Create full file path
+      String filePath = '${appDocDir.path}/$fileName';
+
+      // Download the PDF
+      Response response = await dio.download(
+        pdfUrl,
+        filePath,
+        onReceiveProgress: (received, total) {
+          if (total != -1) {
+            print('Download progress: ${(received / total * 100).toStringAsFixed(0)}%');
+          }
+        },
+      );
+
+      if (response.statusCode == 200) {
+        print('PDF downloaded successfully to: $filePath');
+        return filePath;
+      } else {
+        throw Exception('Failed to download PDF: ${response.statusCode}');
+      }
+
+    } catch (e) {
+      print('Error downloading PDF: $e');
+      return null;
+    }
+  }
+
+  // Alternative method to save to external storage (Android)
+  static Future<String?> downloadPdfToExternalStorage(String pdfUrl, {String? fileName}) async {
+    try {
+      if (!Platform.isAndroid) {
+        throw Exception('External storage only available on Android');
+      }
+
+      // Request storage permission
+      var status = await Permission.storage.status;
+      if (!status.isGranted) {
+        status = await Permission.storage.request();
+        if (!status.isGranted) {
+          throw Exception('Storage permission denied');
+        }
+      }
+
+      // Create Dio instance
+      Dio dio = Dio();
+
+      // Get external storage directory
+      Directory? externalDir = await getExternalStorageDirectory();
+      if (externalDir == null) {
+        throw Exception('External storage not available');
+      }
+
+      // Create filename if not provided
+      fileName ??= 'downloaded_pdf_${DateTime.now().millisecondsSinceEpoch}.pdf';
+
+      // Ensure filename has .pdf extension
+      if (!fileName.endsWith('.pdf')) {
+        fileName += '.pdf';
+      }
+
+      // Create Downloads folder if it doesn't exist
+      Directory downloadsDir = Directory('${externalDir.path}/Downloads');
+      if (!await downloadsDir.exists()) {
+        await downloadsDir.create(recursive: true);
+      }
+
+      // Create full file path
+      String filePath = '${downloadsDir.path}/$fileName';
+
+      // Download the PDF
+      Response response = await dio.download(
+        pdfUrl,
+        filePath,
+        onReceiveProgress: (received, total) {
+          if (total != -1) {
+            print('Download progress: ${(received / total * 100).toStringAsFixed(0)}%');
+          }
+        },
+      );
+
+      if (response.statusCode == 200) {
+        print('PDF downloaded successfully to: $filePath');
+        return filePath;
+      } else {
+        throw Exception('Failed to download PDF: ${response.statusCode}');
+      }
+
+    } catch (e) {
+      print('Error downloading PDF: $e');
+      return null;
+    }
+  }
 }
