@@ -10,6 +10,7 @@ class AuthController extends GetxController {
   final AuthRepository _authRepository;
   final Rx<UserModel?> _user = Rx<UserModel?>(null);
   final RxBool isLoading = false.obs;
+  final RxBool isSocialLoginLoading = false.obs;
 
   AuthController(this._authRepository);
 
@@ -24,7 +25,7 @@ class AuthController extends GetxController {
 
   Future<UserModel?> signInWithGoogle() async {
     try {
-      isLoading(true);
+      isSocialLoginLoading(true);
       final response = await _authRepository.signInWithGoogle();
       if(response.success){
         _user.value = response.data;
@@ -38,7 +39,7 @@ class AuthController extends GetxController {
       debugPrint("Error while signing in with Google: $e");
       return null;
     } finally {
-      isLoading(false);
+      isSocialLoginLoading(false);
     }
   }
 

@@ -15,11 +15,33 @@ class ChatBotView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('AI Career Assistant')),
+      appBar: AppBar(title: const Text('AI-Powered Career Assessment')),
       body: Obx(() => SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
+            // get personalized, Ai-driven career path recommendations based on your skills, interests, and goals.
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.blue.shade50,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.info, color: Colors.blue.shade700),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      "Get personalized, AI-driven career path recommendations based on your skills, interests, and goals.",
+                      style: TextStyle(color: Colors.blue.shade700),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 20),
             CustomTextField(controller: controller.nameController, hintText: "Name"),
             const SizedBox(height: 12),
             CustomTextField(controller: controller.educationController, hintText: "Education"),

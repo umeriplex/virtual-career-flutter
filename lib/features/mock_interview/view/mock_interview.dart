@@ -35,13 +35,7 @@ class MockInterview extends StatelessWidget {
                   ),
 
                   14.verticalSpace,
-
-                  Animate(
-                    effects: const [SlideEffect(
-                      begin: Offset(0.0, -0.5),
-                      duration: Duration(seconds: 1),
-                    ), FadeEffect(duration: Duration(seconds: 1))],
-                    child: Container(
+                  Container(
                       width: double.maxFinite,
                       padding: responsive.responsivePadding(12.w, 10.h, 12.w, 10.h),
                       decoration: BoxDecoration(
@@ -66,130 +60,81 @@ class MockInterview extends StatelessWidget {
                           ),
                         ],
                       )
-                    ),
                   ),
 
                   20.verticalSpace,
-                  Animate(
-                    effects: const [SlideEffect(
-                      begin: Offset(-0.5, 0.0),
-                      duration: Duration(seconds: 1),
-                    ), FadeEffect(duration: Duration(seconds: 1))],
-                    child: _buildItem(
-                      responsive: responsive,
-                      leftIcon: Assets.imagesSocialMedia,
-                      leftText: "Advertising & Marketing",
-                      rightIcon: Assets.imagesArch,
-                      rightText: "Architecture & Design",
-                    ),
+                  _buildItem(
+                    responsive: responsive,
+                    leftIcon: Assets.imagesSocialMedia,
+                    leftText: "Advertising & Marketing",
+                    rightIcon: Assets.imagesArch,
+                    rightText: "Architecture & Design",
                   ),
 
                   10.verticalSpace,
-                  Animate(
-                    effects: const [SlideEffect(
-                        begin: Offset(0.5, 0.0),
-                        duration: Duration(seconds: 1)
-                    ), FadeEffect(duration: Duration(seconds: 1))],
-                    child: _buildItem(
-                      responsive: responsive,
-                      leftIcon: Assets.imagesPaint,
-                      leftText: "Art",
-                      rightIcon: Assets.imagesTravel,
-                      rightText: "Aviation",
-                    ),
+                  _buildItem(
+                    responsive: responsive,
+                    leftIcon: Assets.imagesPaint,
+                    leftText: "Art",
+                    rightIcon: Assets.imagesTravel,
+                    rightText: "Aviation",
                   ),
 
                   10.verticalSpace,
-                  Animate(
-                    effects: const [SlideEffect(
-                        begin: Offset(-0.5, 0.0),
-                        duration: Duration(seconds: 1)
-                    ), FadeEffect(duration: Duration(seconds: 1))],
-                    child: _buildItem(
-                      responsive: responsive,
-                      leftIcon: Assets.imagesBriefcase,
-                      leftText: "Business Management",
-                      rightIcon: Assets.imagesCommunity,
-                      rightText: "Communication",
-                    ),
+                  _buildItem(
+                    responsive: responsive,
+                    leftIcon: Assets.imagesBriefcase,
+                    leftText: "Business Management",
+                    rightIcon: Assets.imagesCommunity,
+                    rightText: "Communication",
                   ),
 
                   10.verticalSpace,
-                  Animate(
-                    effects: const [SlideEffect(
-                      begin: Offset(0.5, 0.0),
-                      duration: Duration(seconds: 1)
-                    ), FadeEffect(duration: Duration(seconds: 1))],
-                    child: _buildItem(
-                      responsive: responsive,
-                      leftIcon: Assets.imagesNetworking,
-                      leftText: "Networking",
-                      rightIcon: Assets.imagesCivil,
-                      rightText: "Civil & Constructions",
-                    ),
+                  _buildItem(
+                    responsive: responsive,
+                    leftIcon: Assets.imagesNetworking,
+                    leftText: "Networking",
+                    rightIcon: Assets.imagesCivil,
+                    rightText: "Civil & Constructions",
                   ),
 
 
 
 
                   10.verticalSpace,
-                  Animate(
-                    effects: const [SlideEffect(
-                        begin: Offset(0.5, 0.0),
-                        duration: Duration(seconds: 1)
-                    ), FadeEffect(duration: Duration(seconds: 1))],
-                    child: _buildItem(
-                      responsive: responsive,
-                      leftIcon: Assets.imagesAnd,
-                      leftText: "Android Development",
-                      rightIcon: Assets.imagesIos,
-                      rightText: "iOS Development",
-                    ),
+                  _buildItem(
+                    responsive: responsive,
+                    leftIcon: Assets.imagesAnd,
+                    leftText: "Android Development",
+                    rightIcon: Assets.imagesIos,
+                    rightText: "iOS Development",
                   ),
 
                   10.verticalSpace,
-                  Animate(
-                    effects: const [SlideEffect(
-                        begin: Offset(0.5, 0.0),
-                        duration: Duration(seconds: 1)
-                    ), FadeEffect(duration: Duration(seconds: 1))],
-                    child: _buildItem(
-                      responsive: responsive,
-                      leftIcon: Assets.imagesFluttter,
-                      leftText: "Flutter Development",
-                      rightIcon: Assets.imagesRn,
-                      rightText: "React Native",
-                    ),
+                  _buildItem(
+                    responsive: responsive,
+                    leftIcon: Assets.imagesFluttter,
+                    leftText: "Flutter Development",
+                    rightIcon: Assets.imagesRn,
+                    rightText: "React Native",
                   ),
 
                   10.verticalSpace,
-                  Animate(
-                    effects: const [SlideEffect(
-                        begin: Offset(0.5, 0.0),
-                        duration: Duration(seconds: 1)
-                    ), FadeEffect(duration: Duration(seconds: 1))],
-                    child: _buildItem(
-                      responsive: responsive,
-                      leftIcon: Assets.imagesAi,
-                      leftText: "AI",
-                      rightIcon: Assets.imagesDs,
-                      rightText: "Data Science",
-                    ),
+                  _buildItem(
+                    responsive: responsive,
+                    leftIcon: Assets.imagesAi,
+                    leftText: "AI",
+                    rightIcon: Assets.imagesDs,
+                    rightText: "Data Science",
                   ),
 
                   10.verticalSpace,
-                  Animate(
-                    effects: const [SlideEffect(
-                        begin: Offset(0.5, 0.0),
-                        duration: Duration(seconds: 1)
-                    ), FadeEffect(duration: Duration(seconds: 1))],
-                    child: _buildItem(
-                      responsive: responsive,
-                      leftIcon: Assets.imagesGd,
-                      leftText: "Graphic Design",
-                      rightIcon: Assets.imagesWd,
-                      rightText: "Web Development",
-                    ),
+                  _buildItem(
+                    responsive: responsive,
+                    leftIcon: Assets.imagesGd,
+                    leftText: "Graphic Design",
+                    rightIcon: Assets.imagesWd,
+                    rightText: "Web Development",
                   ),
 
 

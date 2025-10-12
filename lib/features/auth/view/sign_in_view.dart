@@ -155,7 +155,7 @@ class _SignInViewState extends State<SignInView> {
                   10.verticalSpace,
                   Obx(() {
                     return CustomButton(
-                      isLoading: _controller.isLoading.value,
+                      isLoading: _controller.isSocialLoginLoading.value,
                       isSecondButton: true,
                       prefixIcon: const FaIcon(FontAwesomeIcons.google, color: Colors.black),
                       title: "Continue with Google",
