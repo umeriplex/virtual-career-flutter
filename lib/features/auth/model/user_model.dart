@@ -2,67 +2,74 @@ class UserModel {
   final String id;
   final String fullName;
   final String email;
-  final String? profileImageUrl;
   final String? bio;
-  final bool isActive;
+  final String? profileImageUrl;
   final DateTime dateCreated;
+  final bool isActive;
+  final List<String> connections; // List of user IDs
+  final List<String> followers; // List of user IDs who follow this user
 
   UserModel({
     required this.id,
     required this.fullName,
     required this.email,
-    this.profileImageUrl,
     this.bio,
-    this.isActive = true,
+    this.profileImageUrl,
     required this.dateCreated,
+    required this.isActive,
+    this.connections = const [],
+    this.followers = const [],
   });
 
-  // Convert model to JSON for Firestore
-  Map<String, dynamic> toJson() {
-
-
-    return {
-      'id': id,
-      'fullName': fullName,
-      'email': email,
-      'profileImageUrl': profileImageUrl,
-      'bio': bio,
-      'isActive': isActive,
-      'dateCreated': dateCreated.toIso8601String(),
-    };
-  }
-
-  // Create model from JSON
   factory UserModel.fromJson(Map<String, dynamic> json, String id) {
     return UserModel(
       id: id,
       fullName: json['fullName'] ?? '',
       email: json['email'] ?? '',
-      profileImageUrl: json['profileImageUrl'],
       bio: json['bio'],
-      isActive: json['isActive'] ?? true,
+      profileImageUrl: json['profileImageUrl'],
       dateCreated: DateTime.parse(json['dateCreated']),
+      isActive: json['isActive'] ?? true,
+      connections: List<String>.from(json['connections'] ?? []),
+      followers: List<String>.from(json['followers'] ?? []),
     );
   }
 
-  // copyWith method to create a new instance with updated values
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'fullName': fullName,
+      'email': email,
+      'bio': bio,
+      'profileImageUrl': profileImageUrl,
+      'dateCreated': dateCreated.toIso8601String(),
+      'isActive': isActive,
+      'connections': connections,
+      'followers': followers,
+    };
+  }
+
   UserModel copyWith({
     String? id,
     String? fullName,
     String? email,
-    String? profileImageUrl,
     String? bio,
-    bool? isActive,
+    String? profileImageUrl,
     DateTime? dateCreated,
+    bool? isActive,
+    List<String>? connections,
+    List<String>? followers,
   }) {
     return UserModel(
       id: id ?? this.id,
       fullName: fullName ?? this.fullName,
       email: email ?? this.email,
-      profileImageUrl: profileImageUrl ?? this.profileImageUrl,
       bio: bio ?? this.bio,
-      isActive: isActive ?? this.isActive,
+      profileImageUrl: profileImageUrl ?? this.profileImageUrl,
       dateCreated: dateCreated ?? this.dateCreated,
+      isActive: isActive ?? this.isActive,
+      connections: connections ?? this.connections,
+      followers: followers ?? this.followers,
     );
   }
 }

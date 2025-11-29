@@ -15,7 +15,6 @@ class RouteNames{
   static const String contactUs = '/contactUs';
   static const String termsAndConditions = '/termsAndConditions';
   static const String privacyPolicy = '/privacyPolicy';
-  static const String notifications = '/notifications';
   static const String feedback = '/feedback';
   static const String helpAndSupport = '/helpAndSupport';
   static const String search = '/search';
@@ -24,4 +23,19 @@ class RouteNames{
   static const String checkout = '/checkout';
   static const String orderHistory = '/orderHistory';
   static const String productDetails = '/productDetails';
+
+
+
+  // createJob
+  static const String createJob = '/createJob';
+  // jobDetails
+  static const String jobDetails = '/jobDetails';
+  // createEvent
+  static const String createEvent = '/createEvent';
+  // eventDetails
+  static const String eventDetails = '/eventDetails';
+
+  static const String connections = '/connections';
+  static const String userProfile = '/user-profile';
+  static const String notifications = '/notifications';
 }

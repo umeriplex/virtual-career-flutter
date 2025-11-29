@@ -93,14 +93,9 @@ class _HomeViewState extends State<HomeView> {
                               ),
                             ),
                             InkWell(
-                              // onTap: () async {
-                              //   var success = await authController.signOut();
-                              //   if (success) {
-                              //     SharedPrefs.instance.removeUser();
-                              //     Get.offAllNamed(RouteNames.login);
-                              //   }
-                              // },
-                              onTap: (){},
+                              onTap: (){
+                                Get.toNamed(RouteNames.notifications);
+                              },
                               child: Image.asset(Assets.imagesNoti, width: 40.w, height: 40.w,),
                             ),
                           ],

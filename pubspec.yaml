@@ -73,6 +73,7 @@ dependencies:
   flutter_cache_manager: ^3.4.1
   android_path_provider: ^0.3.1
   dio: ^5.8.0+1
+  url_launcher: ^6.3.2
 
 
 dev_dependencies:

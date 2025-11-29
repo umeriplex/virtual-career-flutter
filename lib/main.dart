@@ -111,6 +111,12 @@ class MyApp extends StatelessWidget {
               ),
               scaffoldBackgroundColor: AppColor.scaffoldBackgroundColor,
               primaryColor: AppColor.primaryColor,
+              dialogTheme: DialogThemeData(
+                backgroundColor: AppColor.scaffoldBackgroundColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
+              ),
             ),
             initialRoute: RouteNames.splash,
             getPages: AppRoutes.routes,

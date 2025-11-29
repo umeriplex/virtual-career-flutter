@@ -16,6 +16,11 @@ class AuthController extends GetxController {
 
   UserModel? get user => _user.value;
 
+  // setter for user
+  set user(UserModel? user) {
+    _user.value = user;
+  }
+
   @override
   void onInit() {
     super.onInit();

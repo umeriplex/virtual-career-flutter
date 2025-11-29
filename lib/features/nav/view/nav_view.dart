@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:virtual_career/features/events/view/events_view.dart';
 import 'package:virtual_career/features/jobs/view/jobs_view.dart';
 import 'package:virtual_career/features/resume_builder/view/resume_builder.dart';
 import 'package:virtual_career/features/splash/controller/nav_controller.dart';
@@ -56,6 +57,13 @@ class NavView extends StatelessWidget {
 
         BottomNavigationBarItem(
           icon: navController.currentIndex.value == 3
+              ? Image.asset(Assets.imagesEventNav, width: 24.w, height: 24.w, color: Colors.black87,)
+              : Image.asset(Assets.imagesEventNav, width: 24.w, height: 24.w, color: Colors.black38,),
+          label: '',
+        ),
+
+        BottomNavigationBarItem(
+          icon: navController.currentIndex.value == 4
               ? Image.asset(Assets.imagesNavChatbot, width: 24.w, height: 24.w, color: Colors.black87,)
               : Image.asset(Assets.imagesNavChatbot, width: 24.w, height: 24.w, color: Colors.black38,),
           label: '',
@@ -70,7 +78,8 @@ class NavView extends StatelessWidget {
       children:  [
         const HomeView(),
         ResumeBuilderView(),
-        const JobView(),
+        const JobsListView(),
+        const EventsListView(),
         ChatBotView(),
       ],
     );

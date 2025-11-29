@@ -15,10 +15,13 @@ class Assets {
   static const String imagesCivil = 'assets/images/civil.png';
   static const String imagesCoins = 'assets/images/coins.png';
   static const String imagesCommunity = 'assets/images/community.png';
+  static const String imagesConference = 'assets/images/conference.jpg';
   static const String imagesDs = 'assets/images/ds.png';
   static const String imagesEdit = 'assets/images/edit.png';
   static const String imagesErrorAnimationPath = 'assets/images/error_animation_path.json';
+  static const String imagesEventNav = 'assets/images/event_nav.png';
   static const String imagesEvents = 'assets/images/events.png';
+  static const String imagesEventt = 'assets/images/eventt.jpeg';
   static const String imagesExpert = 'assets/images/expert.png';
   static const String imagesFluttter = 'assets/images/fluttter.png';
   static const String imagesGd = 'assets/images/gd.png';
@@ -36,14 +39,17 @@ class Assets {
   static const String imagesNavJobs = 'assets/images/nav_jobs.png';
   static const String imagesNavResume = 'assets/images/nav_resume.png';
   static const String imagesNetworking = 'assets/images/networking.png';
+  static const String imagesNetworkingg = 'assets/images/networkingg.jpg';
   static const String imagesNoti = 'assets/images/noti.png';
   static const String imagesPaint = 'assets/images/paint.png';
   static const String imagesPdfLoading = 'assets/images/pdf_loading.json';
   static const String imagesResumeBuilder = 'assets/images/resume_builder.png';
   static const String imagesRn = 'assets/images/rn.png';
+  static const String imagesSeminar = 'assets/images/seminar.jpeg';
   static const String imagesSettings = 'assets/images/settings.png';
   static const String imagesSignupTexture = 'assets/images/signup_texture.png';
   static const String imagesSocialMedia = 'assets/images/social_media.png';
+  static const String imagesSociall = 'assets/images/sociall.jpg';
   static const String imagesTemp01 = 'assets/images/temp01.jpg';
   static const String imagesTemp02 = 'assets/images/temp02.jpg';
   static const String imagesTemp03 = 'assets/images/temp03.jpg';
@@ -60,7 +66,10 @@ class Assets {
   static const String imagesTemp14 = 'assets/images/temp14.jpg';
   static const String imagesTemp15 = 'assets/images/temp15.jpg';
   static const String imagesTextedLogo = 'assets/images/texted_logo.png';
+  static const String imagesTraining = 'assets/images/training.jpeg';
   static const String imagesTravel = 'assets/images/travel.png';
   static const String imagesWd = 'assets/images/wd.png';
+  static const String imagesWebinar = 'assets/images/webinar.jpg';
+  static const String imagesWorkshop = 'assets/images/workshop.jpg';
 
 }

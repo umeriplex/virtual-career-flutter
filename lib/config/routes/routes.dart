@@ -1,15 +1,23 @@
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:virtual_career/config/routes/route_name.dart';
 import 'package:virtual_career/features/auth/view/sign_in_view.dart';
 import 'package:virtual_career/features/auth/view/sign_up_view.dart';
+import 'package:virtual_career/features/events/view/create_event.dart';
+import 'package:virtual_career/features/jobs/view/create_job_view.dart';
 import 'package:virtual_career/features/profile/view/profile_view.dart';
+import 'package:virtual_career/features/profile/view/user_profile_view.dart';
 import '../../features/auth/view/forgot_password_view.dart';
+import '../../features/connections/view/connection_list_view.dart';
+import '../../features/events/view/event_details.dart';
+import '../../features/jobs/view/job_details_page.dart';
 import '../../features/mock_interview/model/interview_model.dart';
 import '../../features/mock_interview/view/interview.dart';
 import '../../features/mock_interview/view/interview_level.dart';
 import '../../features/mock_interview/view/mock_interview.dart';
 import '../../features/mock_interview/view/result_view.dart';
 import '../../features/nav/view/nav_view.dart';
+import '../../features/notifications/view/noti_view.dart';
 import '../../features/splash/view/splash_view.dart';
 
 class AppRoutes {
@@ -86,6 +94,54 @@ class AppRoutes {
         );
       },
     ),
+
+    GetPage(
+      name: RouteNames.createJob,
+      page: () {
+        return CreateJobView();
+      },
+    ),
+
+    GetPage(
+      name: RouteNames.jobDetails,
+      page: () {
+        return JobDetailsView();
+      },
+    ),
+
+    GetPage(
+      name: RouteNames.createEvent,
+      page: () {
+        return CreateEventPage();
+      },
+    ),
+
+    GetPage(
+      name: RouteNames.eventDetails,
+      page: () {
+        return EventDetailsView();
+      },
+    ),
+
+
+
+    GetPage(
+      name: RouteNames.connections,
+      page: () => const ConnectionsView(),
+    ),
+    GetPage(
+      name: RouteNames.userProfile,
+      page: () => const UserProfileView(),
+    ),
+    GetPage(
+      name: RouteNames.notifications,
+      page: () => const NotificationsView(),
+    ),
+
+
+
+
+
 
 
   ];
