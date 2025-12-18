@@ -11,6 +11,8 @@ class EventRepository {
   // Create a new event
   Future<AppResponse<EventModel>> createEvent({
     required String creatorId,
+    String? creatorName,
+    String? creatorImage,
     required String eventTitle,
     required String description,
     required String location,
@@ -27,6 +29,8 @@ class EventRepository {
       final event = EventModel(
         id: docRef.id,
         creatorId: creatorId,
+        creatorName: creatorName,
+        creatorImage: creatorImage,
         eventTitle: eventTitle,
         description: description,
         location: location,
@@ -86,7 +90,7 @@ class EventRepository {
   }
 
   // Get events from connections and public events
-  Future<AppResponse<List<EventModel>>> getConnectionsEvents(List<String> connectionIds) async {
+  Future<AppResponse<List<EventModel>>> getConnectionsEvents(List<String> connectionIds, String currentUserId) async {
     try {
       List<EventModel> connectionEvents = [];
       List<EventModel> publicEvents = [];
@@ -119,7 +123,8 @@ class EventRepository {
       publicEvents = publicEventsSnapshot.docs
           .map((doc) => EventModel.fromJson(doc.data(), doc.id))
           .where((event) =>
-      !connectionCreatorIds.contains(event.creatorId) // Exclude if creator is in connections
+      !connectionCreatorIds.contains(event.creatorId) && // Exclude if creator is in connections
+      event.creatorId != currentUserId // Exclude own events
       ).toList();
 
 

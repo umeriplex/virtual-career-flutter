@@ -254,6 +254,36 @@ class _JobsListViewState extends State<JobsListView> with SingleTickerProviderSt
                     ),
                   ],
                 ),
+              ] else ...[
+                 8.verticalSpace,
+                 InkWell(
+                   onTap: () {
+                     // Navigate to creator profile
+                     Get.toNamed(RouteNames.userProfile, arguments: {'userId': job.creatorId});
+                   },
+                   child: Row(
+                     children: [
+                       CircleAvatar(
+                         radius: 12.r,
+                         backgroundImage: job.creatorImage != null && job.creatorImage!.isNotEmpty
+                             ? NetworkImage(job.creatorImage!)
+                             : null,
+                         child: job.creatorImage == null || job.creatorImage!.isEmpty
+                             ? Icon(Icons.person, size: 16.sp, color: Colors.white)
+                             : null,
+                       ),
+                       8.horizontalSpace,
+                       Text(
+                         'Created by: ${job.creatorName ?? "Unknown User"}',
+                          style: AppTextStyles.bodyOpenSans.copyWith(
+                           fontSize: 12.sp,
+                           color: Theme.of(context).primaryColor,
+                           decoration: TextDecoration.underline,
+                         ),
+                       ),
+                     ],
+                   ),
+                 ),
               ],
             ],
           ),

@@ -42,6 +42,8 @@ class JobController extends GetxController {
       isLoading(true);
       final response = await _jobRepository.createJob(
         creatorId: _authController.user!.id,
+        creatorName: _authController.user!.fullName,
+        creatorImage: _authController.user!.profileImageUrl,
         jobTitle: jobTitle,
         company: company,
         description: description,
@@ -92,7 +94,7 @@ class JobController extends GetxController {
 
       isLoading(true);
       final connectionIds = _authController.user!.connections;
-      final response = await _jobRepository.getConnectionsJobs(connectionIds);
+      final response = await _jobRepository.getConnectionsJobs(connectionIds, _authController.user!.id);
 
       if (response.success) {
         connectionsJobs.value = response.data ?? [];
@@ -176,6 +178,7 @@ class JobController extends GetxController {
     required String coverLetter,
     String? phone,
     File? resumeFile,
+    String? existingResumeUrl,
   }) async {
     try {
       if (_authController.user == null) return false;
@@ -187,6 +190,7 @@ class JobController extends GetxController {
         coverLetter: coverLetter,
         phone: phone,
         resumeFile: resumeFile,
+        existingResumeUrl: existingResumeUrl,
       );
 
       if (response.success) {

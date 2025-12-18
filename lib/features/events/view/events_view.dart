@@ -379,6 +379,37 @@ class _EventsListViewState extends State<EventsListView> with SingleTickerProvid
                 ],
               ),
             ),
+             if (!isMyEvent)
+               Padding(
+                 padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 16.h),
+                 child: InkWell(
+                    onTap: () {
+                       Get.toNamed(RouteNames.userProfile, arguments: {'userId': event.creatorId});
+                    },
+                   child: Row(
+                     children: [
+                       CircleAvatar(
+                         radius: 12.r,
+                         backgroundImage: event.creatorImage != null && event.creatorImage!.isNotEmpty
+                             ? NetworkImage(event.creatorImage!)
+                             : null,
+                         child: event.creatorImage == null || event.creatorImage!.isEmpty
+                             ? Icon(Icons.person, size: 16.sp, color: Colors.white)
+                             : null,
+                       ),
+                       8.horizontalSpace,
+                       Text(
+                         'Created by: ${event.creatorName ?? "Unknown User"}',
+                         style: AppTextStyles.bodyOpenSans.copyWith(
+                           fontSize: 12.sp,
+                           color: Theme.of(context).primaryColor,
+                           decoration: TextDecoration.underline,
+                         ),
+                       ),
+                     ],
+                   ),
+                 ),
+               ),
           ],
         ),
       ),

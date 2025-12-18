@@ -41,6 +41,8 @@ class EventController extends GetxController {
       isLoading.value = true;
       final response = await _eventRepository.createEvent(
         creatorId: creatorId,
+        creatorName: _authController.user?.fullName,
+        creatorImage: _authController.user?.profileImageUrl,
         eventTitle: eventTitle,
         description: description,
         location: location,
@@ -91,8 +93,9 @@ class EventController extends GetxController {
     try {
       isLoading.value = true;
       // Replace with actual connection IDs from your system
-      final List<String> connectionIds = ids ?? ['connection1', 'connection2'];
-      final response = await _eventRepository.getConnectionsEvents(connectionIds);
+      final List<String> connectionIds = ids ?? _authController.user?.connections ?? [];
+      if (_authController.user == null) return;
+      final response = await _eventRepository.getConnectionsEvents(connectionIds, _authController.user!.id);
 
       if (response.success) {
         connectionsEvents.assignAll(response.data!);

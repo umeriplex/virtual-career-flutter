@@ -10,6 +10,7 @@ import 'package:virtual_career/core/utils/responsive.dart';
 import '../controller/event_controller.dart';
 import '../model/event_model.dart';
 import '../../auth/controller/auth_controller.dart';
+import 'package:virtual_career/config/routes/route_name.dart';
 
 class EventDetailsView extends StatefulWidget {
   const EventDetailsView({super.key});
@@ -48,159 +49,13 @@ class _EventDetailsViewState extends State<EventDetailsView> {
       userId: _authController.user!.id,
     );
 
-    print("ISSSs: ${registered}");
-
     setState(() {
       _isRegistered = registered;
       _isCheckingRegistration = false;
     });
   }
 
-  void _showRegistrationDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Register for Event', style: AppTextStyles.headlineOpenSans),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'You are about to register for:',
-              style: AppTextStyles.bodyOpenSans.copyWith(fontSize: 14.sp),
-            ),
-            8.verticalSpace,
-            Text(
-              event.eventTitle,
-              style: AppTextStyles.bodyOpenSans.copyWith(
-                fontWeight: FontWeight.bold,
-                fontSize: 16.sp,
-              ),
-            ),
-            16.verticalSpace,
-            Text(
-              'Add Notes (Optional)',
-              style: AppTextStyles.bodyOpenSans.copyWith(fontWeight: FontWeight.bold),
-            ),
-            8.verticalSpace,
-            CustomTextField(
-              controller: _notesController,
-              maxLines: 3,
-              hintText: 'Any special requirements or notes...',
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Get.back(),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              Get.back();
-              if (_authController.user == null) return;
 
-              await _controller.registerForEvent(
-                eventId: event.id,
-                userId: _authController.user!.id,
-                notes: _notesController.text.trim().isEmpty ? null : _notesController.text.trim(),
-              );
-
-              setState(() {
-                _isRegistered = true;
-              });
-            },
-            child: const Text('Register'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showRegistrationsDialog() {
-    Get.dialog(
-      Dialog(
-        child: Container(
-          width: Get.width * 0.9,
-          height: Get.height * 0.8,
-          padding: EdgeInsets.all(16.w),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Registrations', style: AppTextStyles.headlineOpenSans),
-                  IconButton(
-                    onPressed: () => Get.back(),
-                    icon: const Icon(Icons.close),
-                  ),
-                ],
-              ),
-              16.verticalSpace,
-              Expanded(
-                child: FutureBuilder(
-                  future: _controller.getEventRegistrations(event.id),
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return Center(
-                        child: Text(
-                          'No registrations yet',
-                          style: AppTextStyles.bodyOpenSans.copyWith(color: Colors.grey),
-                        ),
-                      );
-                    }
-
-                    final registrations = snapshot.data!;
-                    return ListView.builder(
-                      itemCount: registrations.length,
-                      itemBuilder: (context, index) {
-                        final registration = registrations[index];
-                        return Card(
-                          margin: EdgeInsets.only(bottom: 12.h),
-                          child: Padding(
-                            padding: EdgeInsets.all(12.w),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'User ID: ${registration.userId.substring(0, 8)}...',
-                                  style: AppTextStyles.bodyOpenSans.copyWith(fontWeight: FontWeight.bold),
-                                ),
-                                8.verticalSpace,
-                                Text(
-                                  'Registered: ${DateFormat('MMM dd, yyyy').format(registration.registeredDate)}',
-                                  style: AppTextStyles.bodyOpenSans.copyWith(
-                                    fontSize: 12.sp,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                                if (registration.notes != null && registration.notes!.isNotEmpty) ...[
-                                  12.verticalSpace,
-                                  Text(
-                                    'Notes:',
-                                    style: AppTextStyles.bodyOpenSans.copyWith(fontWeight: FontWeight.bold),
-                                  ),
-                                  4.verticalSpace,
-                                  Text(
-                                    registration.notes!,
-                                    style: AppTextStyles.bodyOpenSans.copyWith(fontSize: 12.sp),
-                                  ),
-                                ],
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    );
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 
   Future<void> _launchMeetingLink() async {
     if (event.meetingLink == null) return;
@@ -224,12 +79,12 @@ class _EventDetailsViewState extends State<EventDetailsView> {
         title: Text('Event Details',),
         actions: isMyEvent
             ? [
-          // IconButton(
-          //   onPressed: () {
-          //     // Navigate to edit event page
-          //   },
-          //   icon: const Icon(Icons.edit),
-          // ),
+          IconButton(
+            onPressed: () {
+              Get.toNamed(RouteNames.editEvent, arguments: event);
+            },
+            icon: const Icon(Icons.edit),
+          ),
           IconButton(
             onPressed: () {
               Get.dialog(
@@ -433,7 +288,9 @@ class _EventDetailsViewState extends State<EventDetailsView> {
           children: [
             Expanded(
               child: ElevatedButton(
-                onPressed: _showRegistrationsDialog,
+                onPressed: () {
+                  Get.toNamed(RouteNames.eventRegistrationsList, arguments: event.id);
+                },
                 style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.symmetric(vertical: 16.h),
                   backgroundColor: AppColor.buttonColor,
@@ -486,7 +343,14 @@ class _EventDetailsViewState extends State<EventDetailsView> {
           width: double.infinity,
           height: 50.h,
           child: ElevatedButton(
-            onPressed: _isRegistered || isEventPast || !event.isActive ? null : _showRegistrationDialog,
+            onPressed: _isRegistered || isEventPast || !event.isActive ? null : () async {
+              final result = await Get.toNamed(RouteNames.eventRegistration, arguments: event);
+              if (result == true) {
+                setState(() {
+                  _isRegistered = true;
+                });
+              }
+            },
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColor.buttonColor,
               shape: RoundedRectangleBorder(

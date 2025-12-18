@@ -10,6 +10,7 @@ import 'package:virtual_career/core/utils/responsive.dart';
 import '../controller/job_controller.dart';
 import '../model/job_model.dart';
 import '../../auth/controller/auth_controller.dart';
+import 'package:virtual_career/config/routes/route_name.dart';
 
 class JobDetailsView extends StatefulWidget {
   const JobDetailsView({super.key});
@@ -62,248 +63,7 @@ class _JobDetailsViewState extends State<JobDetailsView> {
     }
   }
 
-  void _showApplicationDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Apply for Job', style: AppTextStyles.headlineOpenSans),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Cover Letter *', style: AppTextStyles.bodyOpenSans.copyWith(fontWeight: FontWeight.bold)),
-              8.verticalSpace,
-              TextFormField(
-                controller: _coverLetterController,
-                maxLines: 5,
-                decoration: InputDecoration(
-                  hintText: 'Write your cover letter...',
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.r)),
-                ),
-              ),
-              16.verticalSpace,
-              Text('Phone Number', style: AppTextStyles.bodyOpenSans.copyWith(fontWeight: FontWeight.bold)),
-              8.verticalSpace,
-              TextFormField(
-                controller: _phoneController,
-                keyboardType: TextInputType.phone,
-                decoration: InputDecoration(
-                  hintText: 'Enter phone number',
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.r)),
-                ),
-              ),
-              16.verticalSpace,
-              Text('Resume (PDF)', style: AppTextStyles.bodyOpenSans.copyWith(fontWeight: FontWeight.bold)),
-              8.verticalSpace,
-              OutlinedButton.icon(
-                onPressed: _pickResume,
-                icon: const Icon(Icons.upload_file),
-                label: Text(_resumeFile == null ? 'Upload Resume' : 'Resume Selected'),
-              ),
-              if (_resumeFile != null) ...[
-                8.verticalSpace,
-                Text(
-                  _resumeFile!.path.split('/').last,
-                  style: AppTextStyles.bodyOpenSans.copyWith(fontSize: 12.sp, color: Colors.green),
-                ),
-              ],
-            ],
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Get.back(),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              if (_coverLetterController.text.trim().isEmpty) {
-                Get.snackbar('Error', 'Please write a cover letter');
-                return;
-              }
 
-              Get.back();
-              final success = await _controller.applyForJob(
-                jobId: job.id,
-                coverLetter: _coverLetterController.text.trim(),
-                phone: _phoneController.text.trim().isEmpty ? null : _phoneController.text.trim(),
-                resumeFile: _resumeFile,
-              );
-
-              if (success) {
-                setState(() {
-                  _hasApplied = true;
-                });
-              }
-            },
-            child: const Text('Submit Application'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showApplicationsDialog() {
-    Get.dialog(
-      Dialog(
-        child: Container(
-          width: Get.width * 0.9,
-          height: Get.height * 0.8,
-          padding: EdgeInsets.all(16.w),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Applications', style: AppTextStyles.headlineOpenSans),
-                  IconButton(
-                    onPressed: () => Get.back(),
-                    icon: const Icon(Icons.close),
-                  ),
-                ],
-              ),
-              16.verticalSpace,
-              Expanded(
-                child: FutureBuilder(
-                  future: _controller.fetchJobApplications(job.id),
-                  builder: (context, snapshot) {
-                    return Obx(() {
-                      if (_controller.jobApplications.isEmpty) {
-                        return Center(
-                          child: Text(
-                            'No applications yet',
-                            style: AppTextStyles.bodyOpenSans.copyWith(color: Colors.grey),
-                          ),
-                        );
-                      }
-
-                      return ListView.builder(
-                        itemCount: _controller.jobApplications.length,
-                        itemBuilder: (context, index) {
-                          final application = _controller.jobApplications[index];
-                          return Card(
-                            margin: EdgeInsets.only(bottom: 12.h),
-                            child: Padding(
-                              padding: EdgeInsets.all(12.w),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        'Applicant ID: ${application.applicantId.substring(0, 8)}...',
-                                        style: AppTextStyles.bodyOpenSans.copyWith(fontWeight: FontWeight.bold),
-                                      ),
-                                      Container(
-                                        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-                                        decoration: BoxDecoration(
-                                          color: _getStatusColor(application.status),
-                                          borderRadius: BorderRadius.circular(4.r),
-                                        ),
-                                        child: Text(
-                                          application.status,
-                                          style: AppTextStyles.bodyOpenSans.copyWith(
-                                            color: Colors.white,
-                                            fontSize: 11.sp,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  8.verticalSpace,
-                                  Text(
-                                    'Applied: ${DateFormat('MMM dd, yyyy').format(application.appliedDate)}',
-                                    style: AppTextStyles.bodyOpenSans.copyWith(fontSize: 12.sp, color: Colors.grey),
-                                  ),
-                                  if (application.phone != null) ...[
-                                    8.verticalSpace,
-                                    Row(
-                                      children: [
-                                        Icon(Icons.phone, size: 16.sp, color: Colors.grey),
-                                        4.horizontalSpace,
-                                        Text(application.phone!, style: AppTextStyles.bodyOpenSans.copyWith(fontSize: 12.sp)),
-                                      ],
-                                    ),
-                                  ],
-                                  12.verticalSpace,
-                                  Text('Cover Letter:', style: AppTextStyles.bodyOpenSans.copyWith(fontWeight: FontWeight.bold)),
-                                  4.verticalSpace,
-                                  Text(application.coverLetter, style: AppTextStyles.bodyOpenSans.copyWith(fontSize: 12.sp)),
-                                  if (application.resumeUrl != null) ...[
-                                    12.verticalSpace,
-                                    OutlinedButton.icon(
-                                      onPressed: () {
-                                        // Open resume URL
-                                      },
-                                      icon: const Icon(Icons.file_download),
-                                      label: const Text('View Resume'),
-                                    ),
-                                  ],
-                                  12.verticalSpace,
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: OutlinedButton(
-                                          onPressed: () {
-                                            _controller.updateApplicationStatus(
-                                              applicationId: application.id,
-                                              status: 'Accepted',
-                                            );
-                                          },
-                                          style: OutlinedButton.styleFrom(
-                                            foregroundColor: Colors.green,
-                                            side: const BorderSide(color: Colors.green),
-                                          ),
-                                          child: const Text('Accept'),
-                                        ),
-                                      ),
-                                      8.horizontalSpace,
-                                      Expanded(
-                                        child: OutlinedButton(
-                                          onPressed: () {
-                                            _controller.updateApplicationStatus(
-                                              applicationId: application.id,
-                                              status: 'Rejected',
-                                            );
-                                          },
-                                          style: OutlinedButton.styleFrom(
-                                            foregroundColor: Colors.red,
-                                            side: const BorderSide(color: Colors.red),
-                                          ),
-                                          child: const Text('Reject'),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                      );
-                    });
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Color _getStatusColor(String status) {
-    switch (status.toLowerCase()) {
-      case 'accepted':
-        return Colors.green;
-      case 'rejected':
-        return Colors.red;
-      default:
-        return Colors.orange;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -313,12 +73,12 @@ class _JobDetailsViewState extends State<JobDetailsView> {
         title: Text('Job Details',),
         actions: isMyJob ?
         [
-          // IconButton(
-          //   onPressed: () {
-          //     // Navigate to edit job page
-          //   },
-          //   icon: const Icon(Icons.edit),
-          // ),
+          IconButton(
+            onPressed: () {
+              Get.toNamed(RouteNames.editJob, arguments: job);
+            },
+            icon: const Icon(Icons.edit),
+          ),
           IconButton(
             onPressed: () {
               Get.dialog(
@@ -448,7 +208,9 @@ class _JobDetailsViewState extends State<JobDetailsView> {
           children: [
             Expanded(
               child: ElevatedButton(
-                onPressed: _showApplicationsDialog,
+                onPressed: () {
+                  Get.toNamed(RouteNames.jobApplicationsList, arguments: job.id);
+                },
                 style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.symmetric(vertical: 16.h),
                   shape: RoundedRectangleBorder(
@@ -501,7 +263,14 @@ class _JobDetailsViewState extends State<JobDetailsView> {
           width: double.infinity,
           height: 50.h,
           child: ElevatedButton(
-            onPressed: _hasApplied || !job.isActive ? null : _showApplicationDialog,
+            onPressed: _hasApplied || !job.isActive ? null : () async {
+              final result = await Get.toNamed(RouteNames.jobApplication, arguments: job.id);
+              if (result == true) {
+                setState(() {
+                  _hasApplied = true;
+                });
+              }
+            },
             style: ElevatedButton.styleFrom(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8.r),

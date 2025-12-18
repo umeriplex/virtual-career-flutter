@@ -92,12 +92,12 @@ class _HomeViewState extends State<HomeView> {
                                 ),
                               ),
                             ),
-                            InkWell(
-                              onTap: (){
-                                Get.toNamed(RouteNames.notifications);
-                              },
-                              child: Image.asset(Assets.imagesNoti, width: 40.w, height: 40.w,),
-                            ),
+                            // InkWell(
+                            //   onTap: (){
+                            //     Get.toNamed(RouteNames.notifications);
+                            //   },
+                            //   child: Image.asset(Assets.imagesNoti, width: 40.w, height: 40.w,),
+                            // ),
                           ],
                         ),
 

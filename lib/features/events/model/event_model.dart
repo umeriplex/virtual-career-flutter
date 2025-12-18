@@ -1,6 +1,8 @@
 class EventModel {
   final String id;
   final String creatorId;
+  final String? creatorName;
+  final String? creatorImage;
   final String eventTitle;
   final String description;
   final String location;
@@ -17,6 +19,8 @@ class EventModel {
   EventModel({
     required this.id,
     required this.creatorId,
+    this.creatorName,
+    this.creatorImage,
     required this.eventTitle,
     required this.description,
     required this.location,
@@ -35,6 +39,8 @@ class EventModel {
     return EventModel(
       id: id,
       creatorId: json['creatorId'] ?? '',
+      creatorName: json['creatorName'],
+      creatorImage: json['creatorImage'],
       eventTitle: json['eventTitle'] ?? '',
       description: json['description'] ?? '',
       location: json['location'] ?? '',
@@ -53,6 +59,8 @@ class EventModel {
   Map<String, dynamic> toJson() {
     return {
       'creatorId': creatorId,
+      'creatorName': creatorName,
+      'creatorImage': creatorImage,
       'eventTitle': eventTitle,
       'description': description,
       'location': location,
@@ -71,6 +79,8 @@ class EventModel {
   EventModel copyWith({
     String? id,
     String? creatorId,
+    String? creatorName,
+    String? creatorImage,
     String? eventTitle,
     String? description,
     String? location,
@@ -87,6 +97,8 @@ class EventModel {
     return EventModel(
       id: id ?? this.id,
       creatorId: creatorId ?? this.creatorId,
+      creatorName: creatorName ?? this.creatorName,
+      creatorImage: creatorImage ?? this.creatorImage,
       eventTitle: eventTitle ?? this.eventTitle,
       description: description ?? this.description,
       location: location ?? this.location,

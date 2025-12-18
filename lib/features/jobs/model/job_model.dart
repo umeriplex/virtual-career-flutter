@@ -1,6 +1,8 @@
 class JobModel {
   final String id;
   final String creatorId;
+  final String? creatorName;
+  final String? creatorImage;
   final String jobTitle;
   final String company;
   final String description;
@@ -17,6 +19,8 @@ class JobModel {
   JobModel({
     required this.id,
     required this.creatorId,
+    this.creatorName,
+    this.creatorImage,
     required this.jobTitle,
     required this.company,
     required this.description,
@@ -35,6 +39,8 @@ class JobModel {
     return JobModel(
       id: id,
       creatorId: json['creatorId'] ?? '',
+      creatorName: json['creatorName'],
+      creatorImage: json['creatorImage'],
       jobTitle: json['jobTitle'] ?? '',
       company: json['company'] ?? '',
       description: json['description'] ?? '',
@@ -53,6 +59,8 @@ class JobModel {
   Map<String, dynamic> toJson() {
     return {
       'creatorId': creatorId,
+      'creatorName': creatorName,
+      'creatorImage': creatorImage,
       'jobTitle': jobTitle,
       'company': company,
       'description': description,
@@ -71,6 +79,8 @@ class JobModel {
   JobModel copyWith({
     String? id,
     String? creatorId,
+    String? creatorName,
+    String? creatorImage,
     String? jobTitle,
     String? company,
     String? description,
@@ -87,6 +97,8 @@ class JobModel {
     return JobModel(
       id: id ?? this.id,
       creatorId: creatorId ?? this.creatorId,
+      creatorName: creatorName ?? this.creatorName,
+      creatorImage: creatorImage ?? this.creatorImage,
       jobTitle: jobTitle ?? this.jobTitle,
       company: company ?? this.company,
       description: description ?? this.description,

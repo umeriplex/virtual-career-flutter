@@ -13,6 +13,8 @@ class JobRepository {
   // Create a new job
   Future<AppResponse<JobModel>> createJob({
     required String creatorId,
+    String? creatorName,
+    String? creatorImage,
     required String jobTitle,
     required String company,
     required String description,
@@ -29,6 +31,8 @@ class JobRepository {
       final job = JobModel(
         id: docRef.id,
         creatorId: creatorId,
+        creatorName: creatorName,
+        creatorImage: creatorImage,
         jobTitle: jobTitle,
         company: company,
         description: description,
@@ -87,33 +91,58 @@ class JobRepository {
     }
   }
 
-  // Get jobs from connections
-  Future<AppResponse<List<JobModel>>> getConnectionsJobs(List<String> connectionIds) async {
+  // Get jobs from connections and public jobs (Feed)
+  Future<AppResponse<List<JobModel>>> getConnectionsJobs(List<String> connectionIds, String currentUserId) async {
     try {
-      print("IDs: $connectionIds");
-      if (connectionIds.isEmpty) {
-        return AppResponse(
-          data: [],
-          message: 'No connections found',
-          success: true,
-          statusCode: 200,
-        );
+      List<JobModel> connectionJobs = [];
+      List<JobModel> publicJobs = [];
+
+      // 1. Fetch connections' jobs if there are connections
+      if (connectionIds.isNotEmpty) {
+        final connectionJobsSnapshot = await _firestore
+            .collection('jobs')
+            .where('creatorId', whereIn: connectionIds)
+            .where('isActive', isEqualTo: true)
+            .orderBy('dateCreated', descending: true)
+            .get();
+
+        connectionJobs = connectionJobsSnapshot.docs
+            .map((doc) => JobModel.fromJson(doc.data(), doc.id))
+            .toList();
       }
 
-      final snapshot = await _firestore
+      // 2. Fetch public jobs
+      final publicJobsSnapshot = await _firestore
           .collection('jobs')
-          .where('creatorId', whereIn: connectionIds)
+          .where('isPublic', isEqualTo: true)
           .where('isActive', isEqualTo: true)
-          //.where('isPublic', isEqualTo: true)
           .orderBy('dateCreated', descending: true)
           .get();
 
-      final jobs = snapshot.docs
+      // Filter out public jobs that are already in connectionJobs
+      // Also exclude jobs created by connections (if they were fetched in public query but duplicates would be handled by ID check anyway,
+      // but simpler is to just filter public list).
+      // Actually, simplest is to fetch public jobs and exclude those where creatorId is in connectionIds IF we already fetched them.
+      // But firestore 'whereIn' is limited.
+      // Better strategy:
+      // - Connection Jobs: fetched above.
+      // - Public Jobs: fetched above.
+      // - Combine: Connection Jobs + (Public Jobs NOT in Connection Jobs list).
+
+      final connectionJobIds = connectionJobs.map((j) => j.id).toSet();
+      publicJobs = publicJobsSnapshot.docs
           .map((doc) => JobModel.fromJson(doc.data(), doc.id))
+          .where((job) => 
+              !connectionJobIds.contains(job.id) && 
+              job.creatorId != currentUserId // exclude own jobs
+          )
           .toList();
 
+      // Combine: Connections first
+      final allJobs = [...connectionJobs, ...publicJobs];
+
       return AppResponse(
-        data: jobs,
+        data: allJobs,
         message: 'Jobs fetched successfully',
         success: true,
         statusCode: 200,
@@ -212,11 +241,12 @@ class JobRepository {
     required String coverLetter,
     String? phone,
     File? resumeFile,
+    String? existingResumeUrl,
   }) async {
     try {
-      String? resumeUrl;
+      String? resumeUrl = existingResumeUrl;
 
-      // Upload resume if provided
+      // Upload resume if provided (overrides existingUrl if both present, or handling logic below)
       if (resumeFile != null) {
         final Reference storageRef = FirebaseStorage.instance
             .ref()

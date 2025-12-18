@@ -38,4 +38,10 @@ class RouteNames{
   static const String connections = '/connections';
   static const String userProfile = '/user-profile';
   static const String notifications = '/notifications';
+  static const String editJob = '/editJob';
+  static const String editEvent = '/editEvent';
+  static const String jobApplication = '/jobApplication';
+  static const String jobApplicationsList = '/jobApplicationsList';
+  static const String eventRegistration = '/eventRegistration';
+  static const String eventRegistrationsList = '/eventRegistrationsList';
 }
