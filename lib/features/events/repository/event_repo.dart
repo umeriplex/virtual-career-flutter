@@ -269,15 +269,38 @@ class EventRepository {
   // Get registrations for an event
   Future<AppResponse<List<EventRegistrationModel>>> getEventRegistrations(String eventId) async {
     try {
+      // final snapshot = await _firestore
+      //     .collection('event_registrations')
+      //     .where('eventId', isEqualTo: eventId)
+      //     .orderBy('registeredDate', descending: true)
+      //     .get();
+      //
+      // final registrations = snapshot.docs
+      //     .map((doc) => EventRegistrationModel.fromJson(doc.data(), doc.id))
+      //     .toList();
+
+
       final snapshot = await _firestore
           .collection('event_registrations')
           .where('eventId', isEqualTo: eventId)
           .orderBy('registeredDate', descending: true)
           .get();
 
-      final registrations = snapshot.docs
-          .map((doc) => EventRegistrationModel.fromJson(doc.data(), doc.id))
-          .toList();
+      final registrations = await Future.wait(snapshot.docs.map((doc) async {
+        final registration = EventRegistrationModel.fromJson(doc.data(), doc.id);
+
+        // Fetch user data from users collection
+        final userSnapshot = await _firestore.collection('users').doc(registration.userId).get();
+        final userData = userSnapshot.data();
+
+        // Attach user data to registration (if needed, modify EventRegistrationModel to include user data)
+        return registration.copyWith(user: UserData.fromJson(userData ?? {}));
+      }).toList());
+
+
+
+
+
 
       return AppResponse(
         data: registrations,

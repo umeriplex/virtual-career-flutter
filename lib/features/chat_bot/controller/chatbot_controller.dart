@@ -72,7 +72,7 @@ Make sure the entire response is contextual to the user's profile and country. D
 
 
       final model = GenerativeModel(
-        model: 'gemini-2.0-flash',
+        model: 'gemini-2.5-flash-lite',
         apiKey: AppConstants.geminiKey,
       );
 
@@ -289,7 +289,7 @@ Important Requirements:
 ''';
 
       final model = GenerativeModel(
-        model: 'gemini-2.0-flash',
+        model: 'gemini-2.5-flash-lite',
         apiKey: AppConstants.geminiKey,
       );
 

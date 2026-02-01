@@ -10,6 +10,7 @@ import 'package:virtual_career/core/components/custom_image_view.dart';
 import 'package:virtual_career/core/managers/cache_manager.dart';
 import 'package:virtual_career/core/theme/app_colors.dart';
 import 'package:virtual_career/features/auth/controller/auth_controller.dart';
+import 'package:virtual_career/features/events/view/events_view.dart';
 import 'package:virtual_career/features/splash/controller/nav_controller.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/utils/responsive.dart';
@@ -92,12 +93,21 @@ class _HomeViewState extends State<HomeView> {
                                 ),
                               ),
                             ),
-                            // InkWell(
-                            //   onTap: (){
-                            //     Get.toNamed(RouteNames.notifications);
-                            //   },
-                            //   child: Image.asset(Assets.imagesNoti, width: 40.w, height: 40.w,),
-                            // ),
+                            InkWell(
+                              onTap: (){
+                                Get.toNamed(RouteNames.connections);
+                              },
+                              child: Container(
+                                height: 40.w,
+                                width: 40.w,
+                                padding: EdgeInsets.all(6),
+                                decoration: BoxDecoration(
+                                  color: AppColor.buttonColor,
+                                  borderRadius: BorderRadius.circular(10.r),
+                                ),
+                                child: Image.asset(Assets.friends,),
+                              ),
+                            ),
                           ],
                         ),
 
@@ -153,7 +163,7 @@ class _HomeViewState extends State<HomeView> {
                             title: "Explore Events",
                             image: Assets.imagesEvents,
                             onTap: () {
-                              //Get.offNamed(RouteNames.interviewResult, arguments: { "category" : dummyCategory, "level" : dummyLevel, "result" : dummyResult });
+                              Get.to(EventsListView());
                             },
                           ),
 

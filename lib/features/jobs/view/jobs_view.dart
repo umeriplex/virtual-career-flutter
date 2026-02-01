@@ -73,47 +73,130 @@ class _JobsListViewState extends State<JobsListView> with SingleTickerProviderSt
   }
 
   Widget _buildConnectionsJobs(Responsive responsive) {
-    return Obx(() {
-      if (_controller.isLoading.value && _controller.connectionsJobs.isEmpty) {
-        return const Center(child: CircularProgressIndicator());
-      }
-
-      if (_controller.connectionsJobs.isEmpty) {
-        return Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.work_off, size: 64.sp, color: Colors.grey),
-              16.verticalSpace,
-              Text(
-                'No jobs available',
-                style: AppTextStyles.bodyOpenSans.copyWith(color: Colors.grey),
+    return Column(
+      children: [
+        // Search Field
+        Padding(
+          padding: responsive.responsivePadding(16, 12, 16, 0),
+          child: Obx(() => TextField(
+            controller: _controller.searchController,
+            onChanged: _controller.onSearchChanged,
+            decoration: InputDecoration(
+              hintText: 'Search jobs by title, company, location...',
+              hintStyle: AppTextStyles.bodyOpenSans.copyWith(
+                color: Colors.grey,
+                fontSize: 14.sp,
               ),
-              8.verticalSpace,
-              Text(
-                'Connect with people to see their jobs',
-                style: AppTextStyles.bodyOpenSans.copyWith(
-                  color: Colors.grey,
-                  fontSize: 12.sp,
-                ),
+              prefixIcon: Icon(Icons.search, color: Colors.grey, size: 22.sp),
+              suffixIcon: _controller.searchQuery.value.isNotEmpty
+                  ? IconButton(
+                      icon: Icon(Icons.clear, color: Colors.grey, size: 20.sp),
+                      onPressed: _controller.clearSearch,
+                    )
+                  : null,
+              filled: true,
+              fillColor: Colors.grey.shade100,
+              contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12.r),
+                borderSide: BorderSide.none,
               ),
-            ],
-          ),
-        );
-      }
-
-      return RefreshIndicator(
-        onRefresh: () async => await _controller.fetchConnectionsJobs(),
-        child: ListView.builder(
-          padding: responsive.responsivePadding(16, 16, 16, 16),
-          itemCount: _controller.connectionsJobs.length,
-          itemBuilder: (context, index) {
-            final job = _controller.connectionsJobs[index];
-            return _buildJobCard(job, responsive, isMyJob: false);
-          },
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12.r),
+                borderSide: BorderSide.none,
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12.r),
+                borderSide: BorderSide(color: AppColor.buttonColor, width: 1.5),
+              ),
+            ),
+            style: AppTextStyles.bodyOpenSans.copyWith(fontSize: 14.sp),
+          )),
         ),
-      );
-    });
+        // Jobs List
+        Expanded(
+          child: Obx(() {
+            if (_controller.isLoading.value && _controller.connectionsJobs.isEmpty) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            if (_controller.connectionsJobs.isEmpty) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.work_off, size: 64.sp, color: Colors.grey),
+                    16.verticalSpace,
+                    Text(
+                      'No jobs available',
+                      style: AppTextStyles.bodyOpenSans.copyWith(color: Colors.grey),
+                    ),
+                    8.verticalSpace,
+                    Text(
+                      'Connect with people to see their jobs',
+                      style: AppTextStyles.bodyOpenSans.copyWith(
+                        color: Colors.grey,
+                        fontSize: 12.sp,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }
+
+            // Show filtered results
+            final jobs = _controller.filteredJobs;
+
+            if (_controller.isSearching.value && jobs.isEmpty) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.search_off, size: 64.sp, color: Colors.grey),
+                    16.verticalSpace,
+                    Text(
+                      'No jobs found',
+                      style: AppTextStyles.bodyOpenSans.copyWith(color: Colors.grey),
+                    ),
+                    8.verticalSpace,
+                    Text(
+                      'Try a different search term',
+                      style: AppTextStyles.bodyOpenSans.copyWith(
+                        color: Colors.grey,
+                        fontSize: 12.sp,
+                      ),
+                    ),
+                    16.verticalSpace,
+                    TextButton(
+                      onPressed: _controller.clearSearch,
+                      child: Text(
+                        'Clear Search',
+                        style: AppTextStyles.bodyOpenSans.copyWith(
+                          color: AppColor.buttonColor,
+                          fontSize: 14.sp,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }
+
+            return RefreshIndicator(
+              onRefresh: () async => await _controller.fetchConnectionsJobs(),
+              child: ListView.builder(
+                padding: responsive.responsivePadding(16, 12, 16, 16),
+                itemCount: jobs.length,
+                itemBuilder: (context, index) {
+                  final job = jobs[index];
+                  return _buildJobCard(job, responsive, isMyJob: false);
+                },
+              ),
+            );
+          }),
+        ),
+      ],
+    );
   }
 
   Widget _buildMyJobs(Responsive responsive) {

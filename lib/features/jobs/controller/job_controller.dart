@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
@@ -13,9 +14,16 @@ class JobController extends GetxController {
 
   final RxList<JobModel> myJobs = <JobModel>[].obs;
   final RxList<JobModel> connectionsJobs = <JobModel>[].obs;
+  final RxList<JobModel> filteredJobs = <JobModel>[].obs;
   final RxList<JobApplicationModel> myApplications = <JobApplicationModel>[].obs;
   final RxList<JobApplicationModel> jobApplications = <JobApplicationModel>[].obs;
   final RxBool isLoading = false.obs;
+
+  // Search properties
+  final TextEditingController searchController = TextEditingController();
+  final RxString searchQuery = ''.obs;
+  final RxBool isSearching = false.obs;
+  Timer? _debounceTimer;
 
   JobController(this._jobRepository);
 
@@ -25,6 +33,55 @@ class JobController extends GetxController {
     fetchMyJobs();
     fetchConnectionsJobs();
     fetchMyApplications();
+
+    // Initialize filtered jobs when connections jobs change
+    ever(connectionsJobs, (_) {
+      if (searchQuery.value.isEmpty) {
+        filteredJobs.value = connectionsJobs;
+      } else {
+        _filterJobs(searchQuery.value);
+      }
+    });
+  }
+
+  @override
+  void onClose() {
+    searchController.dispose();
+    _debounceTimer?.cancel();
+    super.onClose();
+  }
+
+  // Debounced search method
+  void onSearchChanged(String query) {
+    _debounceTimer?.cancel();
+    _debounceTimer = Timer(const Duration(milliseconds: 300), () {
+      searchQuery.value = query;
+      if (query.isEmpty) {
+        isSearching.value = false;
+        filteredJobs.value = connectionsJobs;
+      } else {
+        isSearching.value = true;
+        _filterJobs(query);
+      }
+    });
+  }
+
+  // Filter jobs by job title, company, or location
+  void _filterJobs(String query) {
+    final lowerQuery = query.toLowerCase();
+    filteredJobs.value = connectionsJobs.where((job) {
+      return job.jobTitle.toLowerCase().contains(lowerQuery) ||
+          job.company.toLowerCase().contains(lowerQuery) ||
+          job.location.toLowerCase().contains(lowerQuery);
+    }).toList();
+  }
+
+  // Clear search
+  void clearSearch() {
+    searchController.clear();
+    searchQuery.value = '';
+    isSearching.value = false;
+    filteredJobs.value = connectionsJobs;
   }
 
   Future<void> createJob({

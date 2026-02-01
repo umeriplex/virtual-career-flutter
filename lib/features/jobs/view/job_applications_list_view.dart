@@ -80,7 +80,7 @@ class _JobApplicationsListViewState extends State<JobApplicationsListView> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Applicant ID: ${application.applicantId.substring(0, 8)}...',
+                          'New Application',
                           style: AppTextStyles.bodyOpenSans.copyWith(fontWeight: FontWeight.bold),
                         ),
                         Container(

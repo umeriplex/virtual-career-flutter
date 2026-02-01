@@ -109,6 +109,8 @@ class _JobApplicationFormViewState extends State<JobApplicationFormView> {
             CustomTextField(
               controller: _coverLetterController,
               maxLines: 5,
+              keyboardType: TextInputType.multiline,
+              textInputAction: TextInputAction.newline,
               hintText: 'Write your cover letter...',
             ),
             16.verticalSpace,

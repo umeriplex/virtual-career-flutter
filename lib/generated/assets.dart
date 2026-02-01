@@ -71,5 +71,6 @@ class Assets {
   static const String imagesWd = 'assets/images/wd.png';
   static const String imagesWebinar = 'assets/images/webinar.jpg';
   static const String imagesWorkshop = 'assets/images/workshop.jpg';
+  static const String friends = 'assets/images/friends.png';
 
 }

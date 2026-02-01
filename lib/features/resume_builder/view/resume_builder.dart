@@ -405,7 +405,7 @@ class _ResumeBuilderViewState extends State<ResumeBuilderView> {
 
       // Initialize the Gemini model
       final model = GenerativeModel(
-        model: 'gemini-2.0-flash',
+        model: 'gemini-2.5-flash-lite',
         apiKey: AppConstants.geminiKey,
       );
 
@@ -1729,7 +1729,7 @@ class _ResumeParserScreenState extends State<ResumeParserScreen> {
 
       // Initialize the Gemini model
       final model = GenerativeModel(
-        model: 'gemini-2.0-flash',
+        model: 'gemini-2.5-flash-lite',
         apiKey: _apiKeyController.text,
       );
 

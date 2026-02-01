@@ -64,8 +64,15 @@ class _EventRegistrationsListViewState extends State<EventRegistrationsListView>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'User ID: ${registration.userId.substring(0, 8)}...',
+                        'Applicant: ${registration.user?.fullName ?? 'Unknown User'}',
                         style: AppTextStyles.bodyOpenSans.copyWith(fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        'Email: ${registration.user?.email ?? 'N/A'}',
+                        style: AppTextStyles.bodyOpenSans.copyWith(
+                          fontSize: 12.sp,
+                          color: Colors.grey,
+                        ),
                       ),
                       8.verticalSpace,
                       Text(
