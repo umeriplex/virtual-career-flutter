@@ -28,10 +28,9 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-
   final AuthController authController = Get.find<AuthController>();
-  final ResumeBuilderController controller = Get.find<ResumeBuilderController>();
-
+  final ResumeBuilderController controller =
+      Get.find<ResumeBuilderController>();
 
   @override
   Widget build(BuildContext context) {
@@ -39,225 +38,309 @@ class _HomeViewState extends State<HomeView> {
     return Obx(() {
       final user = authController.user;
       if (user == null) {
-        return const Scaffold(body: Center(child: CupertinoActivityIndicator()));
+        return const Scaffold(
+          body: Center(child: CupertinoActivityIndicator()),
+        );
       }
-        return Scaffold(
-          body: SingleChildScrollView(
-            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-            physics: const BouncingScrollPhysics(),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: responsive.deviceWidth(),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).primaryColor,
-                    image: const DecorationImage(
-                      image: AssetImage(Assets.imagesHomeTexture),
-                      fit: BoxFit.cover,
-                    ),
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(30.r),
-                      bottomRight: Radius.circular(30.r),
-                    ),
+      return Scaffold(
+        body: SingleChildScrollView(
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: responsive.deviceWidth(),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor,
+                  image: const DecorationImage(
+                    image: AssetImage(Assets.imagesHomeTexture),
+                    fit: BoxFit.cover,
                   ),
-                  child: Padding(
-                    padding: responsive.responsivePadding(18.w, MediaQuery.of(context).padding.top + 6.h, 18.h, 10.w),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                Get.toNamed(RouteNames.profile);
-                              },
-                              child: Container(
-                                width: 40.w,
-                                height: 40.w,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10.r),
-                                  color: AppColor.buttonColor,
-                                ),
-                                child: Center(
-                                  child: FaIcon(
-                                    FontAwesomeIcons.user,
-                                    color: Colors.black,
-                                    size: 20.sp,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            InkWell(
-                              onTap: (){
-                                Get.toNamed(RouteNames.connections);
-                              },
-                              child: Container(
-                                height: 40.w,
-                                width: 40.w,
-                                padding: EdgeInsets.all(6),
-                                decoration: BoxDecoration(
-                                  color: AppColor.buttonColor,
-                                  borderRadius: BorderRadius.circular(10.r),
-                                ),
-                                child: Image.asset(Assets.friends,),
-                              ),
-                            ),
-                          ],
-                        ),
-
-
-                        15.verticalSpace,
-                        Text(
-                          "Hello",
-                          style: AppTextStyles.bodyOpenSans.copyWith(
-                            color: Colors.white,
-                          ),
-                        ),
-                        Text(
-                          user.fullName,
-                          style: AppTextStyles.headlineOpenSans.copyWith(
-                            color: Colors.white,
-                            fontSize: 24.sp,
-                          ),
-                        ),
-                      ],
-                    ),
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(30.r),
+                    bottomRight: Radius.circular(30.r),
                   ),
                 ),
-
-                Padding(
-                  padding: responsive.responsivePadding(18.w, 10.h, 18.w, 20.h),
+                child: Padding(
+                  padding: responsive.responsivePadding(
+                    18.w,
+                    MediaQuery.of(context).padding.top + 6.h,
+                    18.h,
+                    10.w,
+                  ),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        "Featured Tool & Resources",
-                        style: AppTextStyles.subHeadlinePoppins,
-                      ),
-                      5.verticalSpace,
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          _buildFirstRowItem(
-                            title: "Resume Builder",
-                            image: Assets.imagesResumeBuilder,
-                            onTap: () => Get.find<NavController>().currentIndex.value = 1,
-                          ),
-
-                          _buildFirstRowItem(
-                            title: "Mock Interview",
-                            image: Assets.imagesMockInterview,
-                            onTap: () => Get.toNamed(RouteNames.mockInterview),
-                          ),
-
-                          _buildFirstRowItem(
-                            title: "Explore Events",
-                            image: Assets.imagesEvents,
+                          InkWell(
                             onTap: () {
-                              Get.to(EventsListView());
+                              Get.toNamed(RouteNames.profile);
                             },
+                            child: Container(
+                              width: 40.w,
+                              height: 40.w,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10.r),
+                                color: AppColor.buttonColor,
+                              ),
+                              child: Center(
+                                child: FaIcon(
+                                  FontAwesomeIcons.user,
+                                  color: Colors.black,
+                                  size: 20.sp,
+                                ),
+                              ),
+                            ),
                           ),
-
+                          InkWell(
+                            onTap: () {
+                              Get.toNamed(RouteNames.connections);
+                            },
+                            child: Container(
+                              height: 40.w,
+                              width: 40.w,
+                              padding: EdgeInsets.all(6),
+                              decoration: BoxDecoration(
+                                color: AppColor.buttonColor,
+                                borderRadius: BorderRadius.circular(10.r),
+                              ),
+                              child: Image.asset(Assets.friends),
+                            ),
+                          ),
                         ],
                       ),
 
-                      Obx((){
-                        if(controller.resumes.isNotEmpty){
-                          List<UserResume> resumes = controller.resumes;
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
+                      15.verticalSpace,
+                      Text(
+                        "Hello",
+                        style: AppTextStyles.bodyOpenSans.copyWith(
+                          color: Colors.white,
+                        ),
+                      ),
+                      Text(
+                        user.fullName,
+                        style: AppTextStyles.headlineOpenSans.copyWith(
+                          color: Colors.white,
+                          fontSize: 24.sp,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
 
-                            children: [
-                              15.verticalSpace,
-                              Text(
-                                "My Resumes",
-                                style: AppTextStyles.subHeadlinePoppins,
+              Padding(
+                padding: responsive.responsivePadding(18.w, 10.h, 18.w, 20.h),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      "Featured Tool & Resources",
+                      style: AppTextStyles.subHeadlinePoppins,
+                    ),
+                    5.verticalSpace,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        _buildFirstRowItem(
+                          title: "Resume Builder",
+                          image: Assets.imagesResumeBuilder,
+                          onTap: () =>
+                              Get.find<NavController>().currentIndex.value = 1,
+                        ),
+
+                        _buildFirstRowItem(
+                          title: "Mock Interview",
+                          image: Assets.imagesMockInterview,
+                          onTap: () => Get.toNamed(RouteNames.mockInterview),
+                        ),
+
+                        _buildFirstRowItem(
+                          title: "Explore Events",
+                          image: Assets.imagesEvents,
+                          onTap: () {
+                            Get.to(EventsListView());
+                          },
+                        ),
+                      ],
+                    ),
+
+                    15.verticalSpace,
+
+                    // Job Market Trends Banner
+                    GestureDetector(
+                      onTap: () => Get.toNamed(RouteNames.trendingJobs),
+                      child: Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.all(16.w),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              Theme.of(context).primaryColor,
+                              Theme.of(context).primaryColor.withOpacity(0.8),
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          borderRadius: BorderRadius.circular(20.r),
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
+                              padding: EdgeInsets.all(12.w),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.2),
+                                borderRadius: BorderRadius.circular(12.r),
                               ),
-                              5.verticalSpace,
-                              SizedBox(
-                                width: double.maxFinite,
-                                height: 250.h,
-                                child: SingleChildScrollView(
-                                  scrollDirection: Axis.horizontal,
-                                  child: Row(
-                                    children: List.generate(
-                                      resumes.length, (index) => GestureDetector(
+                              child: Icon(
+                                Icons.trending_up,
+                                color: Colors.white,
+                                size: 28.sp,
+                              ),
+                            ),
+                            16.horizontalSpace,
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Job Market Trends",
+                                    style: AppTextStyles.titleOpenSans.copyWith(
+                                      color: Colors.white,
+                                      fontSize: 16.sp,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  4.verticalSpace,
+                                  Text(
+                                    "Explore 1,300+ jobs, trending skills & market insights",
+                                    style: AppTextStyles.captionOpenSans
+                                        .copyWith(
+                                          color: Colors.white.withOpacity(0.9),
+                                          fontSize: 12.sp,
+                                        ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Icon(
+                              Icons.arrow_forward_ios,
+                              color: Colors.white.withOpacity(0.7),
+                              size: 18.sp,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    Obx(() {
+                      if (controller.resumes.isNotEmpty) {
+                        List<UserResume> resumes = controller.resumes;
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+
+                          children: [
+                            15.verticalSpace,
+                            Text(
+                              "My Resumes",
+                              style: AppTextStyles.subHeadlinePoppins,
+                            ),
+                            5.verticalSpace,
+                            SizedBox(
+                              width: double.maxFinite,
+                              height: 250.h,
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  children: List.generate(
+                                    resumes.length,
+                                    (index) => GestureDetector(
                                       onTap: () async {
-                                        Get.to(() => ResumeViewer(pdfUrl: resumes[index].pdfUrl, title: resumes[index].title,));
+                                        Get.to(
+                                          () => ResumeViewer(
+                                            pdfUrl: resumes[index].pdfUrl,
+                                            title: resumes[index].title,
+                                          ),
+                                        );
                                       },
                                       onLongPress: () async {
-
                                         AwesomeDialog(
                                           context: context,
                                           dialogType: DialogType.warning,
                                           animType: AnimType.scale,
                                           title: 'Delete Resume',
-                                          desc: 'Are you sure you want to delete this resume?',
+                                          desc:
+                                              'Are you sure you want to delete this resume?',
                                           btnCancelOnPress: () {},
                                           btnOkOnPress: () {
-                                            controller.deleteUserResume(resumes[index].id);
+                                            controller.deleteUserResume(
+                                              resumes[index].id,
+                                            );
                                           },
                                         ).show();
-
-
-
                                       },
                                       child: Container(
-                                          clipBehavior: Clip.antiAlias,
-                                          height: 240.h,
-                                          margin: EdgeInsets.only(right: 14.w),
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: AppColor.black20.withValues(alpha: 0.05),
-                                                offset: const Offset(0, 2),
-                                                blurRadius: 4,
-                                              ),
-                                              BoxShadow(
-                                                color: AppColor.black20.withValues(alpha: 0.05),
-                                                offset: const Offset(2, 0),
-                                                blurRadius: 4,
-                                              ),
-                                            ],
-                                          ),
-                                          child: UltimateCachedNetworkImage(imageUrl: resumes[index].thumbnailUrl, fit: BoxFit.contain,)
+                                        clipBehavior: Clip.antiAlias,
+                                        height: 240.h,
+                                        margin: EdgeInsets.only(right: 14.w),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: AppColor.black20
+                                                  .withValues(alpha: 0.05),
+                                              offset: const Offset(0, 2),
+                                              blurRadius: 4,
+                                            ),
+                                            BoxShadow(
+                                              color: AppColor.black20
+                                                  .withValues(alpha: 0.05),
+                                              offset: const Offset(2, 0),
+                                              blurRadius: 4,
+                                            ),
+                                          ],
+                                        ),
+                                        child: UltimateCachedNetworkImage(
+                                          imageUrl: resumes[index].thumbnailUrl,
+                                          fit: BoxFit.contain,
+                                        ),
                                       ),
-                                    ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ],
-                          );
-                        }else{
-                          return const SizedBox.shrink();
-                        }
-                      }),
-
-
-                    ],
-                  ),
+                            ),
+                          ],
+                        );
+                      } else {
+                        return const SizedBox.shrink();
+                      }
+                    }),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        );
-      }
-    );
+        ),
+      );
+    });
   }
 
-  _buildFirstRowItem ({ required String title, required String image, required void Function() onTap}) {
+  _buildFirstRowItem({
+    required String title,
+    required String image,
+    required void Function() onTap,
+  }) {
     return Expanded(
       child: GestureDetector(
         onTap: onTap,
@@ -271,13 +354,17 @@ class _HomeViewState extends State<HomeView> {
             ),
           ),
           padding: EdgeInsets.all(20.r),
-          margin: title == "Resume Builder" ? EdgeInsets.only(right: 10.w) : title == "Explore Events" ? EdgeInsets.only(left: 10.w) : EdgeInsets.zero,
+          margin: title == "Resume Builder"
+              ? EdgeInsets.only(right: 10.w)
+              : title == "Explore Events"
+              ? EdgeInsets.only(left: 10.w)
+              : EdgeInsets.zero,
           child: Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Image.asset(image, width: 50.w, height: 50.w,),
+                Image.asset(image, width: 50.w, height: 50.w),
                 5.verticalSpace,
                 Text(
                   title,
@@ -326,24 +413,29 @@ final InterviewResult dummyResult = InterviewResult(
   questions: [
     InterviewQuestion(
       question: "Explain the difference between async and await in Dart",
-      userAnswer: "Async marks a function as asynchronous, and await pauses execution until the Future completes",
-      idealAnswer: "Async marks a function to return a Future and enables await. Await pauses execution until the Future completes, without blocking the thread.",
+      userAnswer:
+          "Async marks a function as asynchronous, and await pauses execution until the Future completes",
+      idealAnswer:
+          "Async marks a function to return a Future and enables await. Await pauses execution until the Future completes, without blocking the thread.",
       score: 90,
     ),
     InterviewQuestion(
       question: "What are the main SOLID principles?",
       userAnswer: "Single responsibility, Open-closed, and Liskov substitution",
-      idealAnswer: "Single responsibility, Open-closed, Liskov substitution, Interface segregation, and Dependency inversion",
+      idealAnswer:
+          "Single responsibility, Open-closed, Liskov substitution, Interface segregation, and Dependency inversion",
       score: 75,
     ),
     InterviewQuestion(
       question: "How would you optimize a slow database query?",
       userAnswer: "I would add indexes to the columns being queried",
-      idealAnswer: "Add indexes, analyze query execution plan, optimize joins, consider denormalization, and implement caching where appropriate",
+      idealAnswer:
+          "Add indexes, analyze query execution plan, optimize joins, consider denormalization, and implement caching where appropriate",
       score: 80,
     ),
   ],
-  summary: "The candidate demonstrated strong technical knowledge particularly in core programming concepts. "
+  summary:
+      "The candidate demonstrated strong technical knowledge particularly in core programming concepts. "
       "They communicated clearly and showed good problem-solving approaches. "
       "Areas for improvement include deeper knowledge of system design patterns and cloud technologies. "
       "With some focused study in these areas, they would be ready for senior-level interviews.",

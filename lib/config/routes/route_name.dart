@@ -44,4 +44,9 @@ class RouteNames{
   static const String jobApplicationsList = '/jobApplicationsList';
   static const String eventRegistration = '/eventRegistration';
   static const String eventRegistrationsList = '/eventRegistrationsList';
+
+  // Trending Jobs
+  static const String trendingJobs = '/trendingJobs';
+  static const String jobSearch = '/jobSearch';
+  static const String jobMarketDetail = '/jobMarketDetail';
 }

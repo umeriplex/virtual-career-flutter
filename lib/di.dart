@@ -19,11 +19,12 @@ import 'features/notifications/controller/noti_controller.dart';
 import 'features/notifications/repository/noti_repo.dart';
 import 'features/resume_builder/controller/resumer_builder_controller.dart';
 import 'features/resume_builder/repository/resume_builder_repository.dart';
+import 'features/trending_jobs/service/job_market_service.dart';
+import 'features/trending_jobs/controller/trending_jobs_controller.dart';
 import 'firebase_options.dart';
 
-class DI{
+class DI {
   Future<void> init() async {
-
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
@@ -44,14 +45,17 @@ class DI{
     SharedPrefs.instance.init();
 
     // init repositories
-    await _initRepositories(firebaseFirestore, firebaseAuth,firebaseStorage);
+    await _initRepositories(firebaseFirestore, firebaseAuth, firebaseStorage);
 
     // init controllers
     await _initControllers();
-
   }
 
-  Future<void> _initRepositories (FirebaseFirestore fs, FirebaseAuth fa, FirebaseStorage storage) async {
+  Future<void> _initRepositories(
+    FirebaseFirestore fs,
+    FirebaseAuth fa,
+    FirebaseStorage storage,
+  ) async {
     Get.lazyPut(() => AuthRepository(fs, fa), fenix: true);
     Get.lazyPut(() => ResumeBuilderRepository(fs, storage), fenix: true);
     Get.lazyPut(() => JobRepository(fs), fenix: true);
@@ -60,15 +64,28 @@ class DI{
     Get.lazyPut(() => NotificationRepository(fs), fenix: true);
   }
 
-  Future<void> _initControllers () async {
+  Future<void> _initControllers() async {
     Get.put(NavController(), permanent: true);
     Get.put(AuthController(Get.find()), permanent: true);
     Get.lazyPut(() => ResumeBuilderController(Get.find()), fenix: true);
     Get.lazyPut(() => ChatBotController(), fenix: true);
     Get.lazyPut(() => JobController(Get.find<JobRepository>()), fenix: true);
-    Get.lazyPut(() => EventController(Get.find<EventRepository>()), fenix: true);
-    Get.lazyPut(() => ConnectionController(Get.find<ConnectionRepository>()), fenix: true);
-    Get.lazyPut(() => NotificationController(Get.find<NotificationRepository>()), fenix: true);
-
+    Get.lazyPut(
+      () => EventController(Get.find<EventRepository>()),
+      fenix: true,
+    );
+    Get.lazyPut(
+      () => ConnectionController(Get.find<ConnectionRepository>()),
+      fenix: true,
+    );
+    Get.lazyPut(
+      () => NotificationController(Get.find<NotificationRepository>()),
+      fenix: true,
+    );
+    Get.lazyPut(() => JobMarketService(), fenix: true);
+    Get.lazyPut(
+      () => TrendingJobsController(Get.find<JobMarketService>()),
+      fenix: true,
+    );
   }
 }

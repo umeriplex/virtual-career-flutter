@@ -53,7 +53,7 @@ class _InterviewScreenState extends State<InterviewScreen> {
   void _initializeGemini() {
     const apiKey = AppConstants.geminiKey; // Replace with your actual API key
     _model = GenerativeModel(
-      model: 'gemini-2.5-flash-lite',
+      model: AppConstants.geminiModel,
       apiKey: apiKey,
     );
     _chat = _model.startChat();

@@ -405,7 +405,7 @@ class _ResumeBuilderViewState extends State<ResumeBuilderView> {
 
       // Initialize the Gemini model
       final model = GenerativeModel(
-        model: 'gemini-2.5-flash-lite',
+        model: AppConstants.geminiModel,
         apiKey: AppConstants.geminiKey,
       );
 
